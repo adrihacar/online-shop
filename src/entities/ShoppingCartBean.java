@@ -2,32 +2,14 @@ package entities;
 
 public class ShoppingCartBean {
 	
-	private int idProduct;
+	private int idCart;
 	
 	private int idUser;
 	
-	private int cuantity;
-	
 	public ShoppingCartBean() {}
 
-	public ShoppingCartBean(int idProduct, int idUser, int cuantity) {
-		this.idProduct = idProduct;
+	public ShoppingCartBean(int idUser) {
 		this.idUser = idUser;
-		this.cuantity = cuantity;
-	}
-
-	/**
-	 * @return the idProduct
-	 */
-	public int getIdProduct() {
-		return idProduct;
-	}
-
-	/**
-	 * @param idProduct the idProduct to set
-	 */
-	public void setIdProduct(int idProduct) {
-		this.idProduct = idProduct;
 	}
 
 	/**
@@ -44,20 +26,6 @@ public class ShoppingCartBean {
 		this.idUser = idUser;
 	}
 
-	/**
-	 * @return the cuantity
-	 */
-	public int getCuantity() {
-		return cuantity;
-	}
-
-	/**
-	 * @param cuantity the cuantity to set
-	 */
-	public void setCuantity(int cuantity) {
-		this.cuantity = cuantity;
-	}
-	
 	
 
 }

@@ -2,7 +2,7 @@ package entities;
 
 public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	
-	private int id;
+	private int idUser;
 	
 	private String name;
 	
@@ -30,14 +30,13 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	 * @return the id
 	 */
 	public int getId() {
-		return id;
+		return idUser;
 	}
-
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
-		this.id = id;
+		this.idUser = id;
 	}
 
 	/**
