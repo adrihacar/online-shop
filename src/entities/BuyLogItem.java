@@ -1,6 +1,6 @@
 package entities;
 
-public class BougthsLogItem {
+public class BuyLogItem {
 	
 	private int idBougthItem;
 	
@@ -12,7 +12,7 @@ public class BougthsLogItem {
 	
 	private int quantity;
 
-	public BougthsLogItem(int idLog, int idProduct, int idSeller, int quantity) {
+	public BuyLogItem(int idLog, int idProduct, int idSeller, int quantity) {
 		this.idLog = idLog;
 		this.idProduct = idProduct;
 		this.idSeller = idSeller;

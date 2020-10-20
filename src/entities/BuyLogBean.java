@@ -1,12 +1,12 @@
 package entities;
 
-public class BoughtsLogBean {
+public class BuyLogBean {
 	
 	private int idLog;
 	
 	private int idCart;
 
-	public BoughtsLogBean(int idCart) {
+	public BuyLogBean(int idCart) {
 		this.idCart = idCart;
 	}
 

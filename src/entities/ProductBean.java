@@ -17,8 +17,6 @@ public class ProductBean {
 	private String image;
 	
 	private double price;
-	
-	public ProductBean() {}
 
 	public ProductBean(String seller, String name, int status, int category, String description, String image,
 			double price) {
