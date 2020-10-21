@@ -1,24 +1,46 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.sun.istack.NotNull;
+
+@Entity
 public class ProductBean {
 	
+	@Id
 	private int id;
 	
-	private String seller;
+	@Column(name="seller")
+	@NotNull
+	private int seller;
 	
+	@Column(name="name")
+	@NotNull
 	private String name;
 	
+	@Column(name="status")
+	@NotNull
 	private int status;
 	
+	@Column(name="category")
+	@NotNull
 	private int category;
 	
+	@Column(name="description")
+	@NotNull
 	private String description;
 	
+	@Column(name="image")
+	@NotNull
 	private String image;
 	
+	@Column(name="price")
+	@NotNull
 	private double price;
 
-	public ProductBean(String seller, String name, int status, int category, String description, String image,
+	public ProductBean(int seller, String name, int status, int category, String description, String image,
 			double price) {
 		this.seller = seller;
 		this.name = name;
@@ -46,14 +68,14 @@ public class ProductBean {
 	/**
 	 * @return the seller
 	 */
-	public String getSeller() {
+	public int getSeller() {
 		return seller;
 	}
 
 	/**
 	 * @param seller the seller to set
 	 */
-	public void setSeller(String seller) {
+	public void setSeller(int seller) {
 		this.seller = seller;
 	}
 
