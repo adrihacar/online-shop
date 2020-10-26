@@ -28,6 +28,9 @@
                   <a class="nav-link" href="./dashboard.jsp">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
+                <a class="nav-link" href="./addProduct.jsp">Add product</a>
+              </li>
+                <li class="nav-item">
                   <a class="nav-link" href="./user-config.jsp">My user</a>
                 </li>
               </ul>

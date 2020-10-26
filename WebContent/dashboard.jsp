@@ -44,12 +44,15 @@
                 <a class="nav-link" href="./dashboard.jsp">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="./addProduct.jsp">Add product</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="./user-config.jsp">My user</a>
               </li>
             </ul>
             <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
+                <a type="button" class="btn btn-outline-warning" href="./cart.jsp">My cart</a>
               </div>
               <input class="form-control" type="text" placeholder="Search" aria-label="Search">
               <a href="./search.jsp" class="btn btn-primary nav-item">Search</a>
