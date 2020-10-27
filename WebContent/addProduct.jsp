@@ -44,7 +44,7 @@
           </nav>
     </header>
  	
-		<!-- Default form register -->
+		<!-- Default form Add product -->
 	<form action='/addProdcut' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
@@ -58,10 +58,10 @@
             <!-- Cattegory -->
                 <label style="color: white;" for="cattegory">Cattegory:</label>
                 <select id="cattegory" name="cattegoryProduct">
-                  <option value="Home">Home</option>
-                  <option value="Toy">Toys</option>
-                  <option value="Games">Games</option>
-                  <option value="Clothes">Clothes</option>
+                  <option value="0">Home</option>
+                  <option value="1">Toys</option>
+                  <option value="2">Games</option>
+                  <option value="3">Clothes</option>
                 </select>
             </div>
 	    </div>
