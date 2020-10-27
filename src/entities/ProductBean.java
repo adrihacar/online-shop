@@ -1,7 +1,10 @@
 package entities;
 
+import static javax.persistence.GenerationType.AUTO;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.sun.istack.NotNull;
@@ -9,7 +12,12 @@ import com.sun.istack.NotNull;
 @Entity
 public class ProductBean {
 	
+	public ProductBean() {
+		
+	}
+	
 	@Id
+	@GeneratedValue (strategy = AUTO)
 	private int id;
 	
 	@Column(name="seller")
