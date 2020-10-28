@@ -4,6 +4,8 @@
 	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>TIWDS</jta-data-source>
 		<class>entities.ProductBean</class>
+		<class>entities.CartBean</class>
+		<class>entities.CartProductBean</class>
 		<properties>
 			<property name="eclipselink.logging.level" value="FINE"/>
 			<property name="javax.persistence.schema-generation.database.action" value="create"/>
