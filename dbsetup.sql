@@ -1,47 +1,47 @@
-DROP TABLE USERS;
-DROP TABLE PRODUCTS;
+DROP TABLE CARTPRODUCTS;
 DROP TABLE CARTS;
-DROP TABLE CARTITEMS;
+DROP TABLE PRODUCTS;
+DROP TABLE USERS;
 
 CREATE TABLE USERS (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(256),
-    surname VARCHAR(256),
-    email VARCHAR(256) UNIQUE,
-    location VARCHAR(256),
-    password VARCHAR(256)
+    name VARCHAR(256) NOT NULL,
+    surname VARCHAR(256) NOT NULL,
+    email VARCHAR(256) UNIQUE NOT NULL,
+    location VARCHAR(256) NOT NULL,
+    password VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE PRODUCTS (
     id SERIAL PRIMARY KEY,
-    seller BIGINT UNSIGNED,
-    name VARCHAR(256),
-    status INTEGER,
-    category INTEGER,
-    description TEXT,
-    image BLOB,
-    price DOUBLE,
+    seller BIGINT UNSIGNED NOT NULL,
+    name VARCHAR(256) NOT NULL,
+    status INTEGER NOT NULL,
+    category INTEGER NOT NULL,
+    description TEXT NOT NULL,
+    image BLOB NOT NULL,
+    price DOUBLE NOT NULL,
     
-    FOREIGN KEY(seller) REFERENCES users(id)
+    FOREIGN KEY(seller) REFERENCES USERS(id)
 );
 
 CREATE TABLE CARTS (
     id SERIAL PRIMARY KEY,
-    user BIGINT UNSIGNED,
-    address VARCHAR(256),
-    paymethod INTEGER,
-    bought BOOLEAN,
-    date VARCHAR(16),
+    user BIGINT UNSIGNED NOT NULL,
+    address VARCHAR(256) NOT NULL,
+    paymethod INTEGER NOT NULL,
+    bought BOOLEAN NOT NULL,
+    date VARCHAR(16) NOT NULL,
 
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES USERS(id)
 );
 
-CREATE TABLE CARTITEMS (
+CREATE TABLE CARTPRODUCTS (
     id SERIAL PRIMARY KEY,
-    cart BIGINT UNSIGNED,
-    product BIGINT UNSIGNED,
-    quantity INTEGER,
+    cart BIGINT UNSIGNED NOT NULL,
+    product BIGINT UNSIGNED NOT NULL,
+    quantity INTEGER NOT NULL,
 
-    FOREIGN KEY(cart) REFERENCES carts(id)
-    FOREIGN KEY(product) REFERENCES products(id)
+    FOREIGN KEY(cart) REFERENCES CARTS(id),
+    FOREIGN KEY(product) REFERENCES PRODUCTS(id)
 );
