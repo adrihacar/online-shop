@@ -2,10 +2,11 @@ package jdbc;
 
 import entities.UserBean;
 
-public interface UserDAO {
+interface UserDAO {
 	public boolean existClient(String  email);
 	public void insertUser(UserBean user);
-	public void checkUser(String email, String hashedPassword);
+	public boolean checkUser(String email, String hashedPassword);
 	public void updateUser(UserBean user, int id);
 	public UserBean getUserdata(String id);
+	public String getSaltFromDatabase(String email);
 }

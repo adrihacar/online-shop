@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import entities.UserBean;
+import jdbc.UserDAOImp;
+
 /**
  * Servlet implementation class LogInServlet
  */
@@ -35,10 +38,26 @@ public class RegisterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("Name");
-		String surame = request.getParameter("Surname");
+		String surname = request.getParameter("Surname");
 		String email = request.getParameter("Email");
 		String password = request.getParameter("Password");
 		String location = request.getParameter("Location");
+		
+		
+		UserDAOImp userDAOImp = new UserDAOImp();
+		
+		//check if the client exists, checking email
+		if(userDAOImp.existClient(email)) {
+			response.getWriter().append("Error: User exists").append(request.getContextPath());
+			
+		}else {
+			//success 
+			UserBean user= new UserBean(name, surname, email, location, password);
+			userDAOImp.insertUser(user);
+			response.getWriter().append("Success: user created").append(request.getContextPath());
+		}
+
+		
 		
 		
 	}

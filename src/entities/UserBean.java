@@ -1,5 +1,9 @@
 package entities;
 
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	
 	private int id;
@@ -14,17 +18,51 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	
 	private String password;
 	
+	private String salt;
+	
 	// Creates new UserBean
 	public UserBean() {
 	}
 
-	public UserBean(String name, String surname, String username, String location, String password) {
+	public UserBean(String name, String surname, String email, String location, String password) {
 		this.name = name;
 		this.surname = surname;
-		this.email = username;
+		this.email = email;
 		this.location = location;
-		this.password = password;
+
+		
+		/*Create a random salt with class SecureRandom*/
+		SecureRandom random = new SecureRandom();
+		byte[] num = new byte[16];
+		random.nextBytes(num);
+		String salt=Base64.getEncoder().encodeToString(num); /*Encode the bytes generated in Base64 printable Strings*/
+		
+		this.setSalt(salt);
+		this.password= getSHA256Hash(password,salt);
+		
 	}
+	
+	public static String getSHA256Hash(String data, String salt) {
+		 String result = null;
+		 try {
+			 /*Create Object digest*/
+		     MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		     /*Add salt to object*/
+		     digest.update(salt.getBytes());
+		     /*Add the data(password) to object*/
+		     byte[] hash = digest.digest(data.getBytes("UTF-8"));
+		     /*Get the hash and encode in Base64*/
+		     result = Base64.getEncoder().encodeToString(hash);
+		            
+		            
+		 }catch(Exception ex) {
+		      ex.printStackTrace();
+		 }
+		 return result;
+		
+		 }
+	
+	
 
 	/**
 	 * @return the id
@@ -107,6 +145,14 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 	
 		
