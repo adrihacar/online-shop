@@ -79,7 +79,7 @@ public class UserDAOImp implements UserDAO{
 			}
 			
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 		

@@ -2,14 +2,26 @@ package entities;
 
 import static javax.persistence.GenerationType.AUTO;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Query;
+
+import org.jboss.logging.Param;
 
 import com.sun.istack.NotNull;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name="findAllProductsBySeller",
+			query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller")
+	
+})
 public class ProductBean {
 	
 	public ProductBean() {
@@ -41,7 +53,6 @@ public class ProductBean {
 	private String description;
 	
 	@Column(name="image")
-	@NotNull
 	private String image;
 	
 	@Column(name="price")
