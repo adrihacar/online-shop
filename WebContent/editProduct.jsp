@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    
+    import = "entities.ProductBean"%>
+    
 <!doctype html>
 <html lang="es">
   <head>
@@ -43,42 +46,47 @@
             </div>
           </nav>
     </header>
+    
+    <% 
+    Object object = request.getAttribute("prodcut");
+    ProductBean product = (ProductBean) object;
+    %>
  	
-		<!-- Default form Add product -->
-	<form action='/addProdcut' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
+		<!-- Default form register -->
+	<form action='/editProdcut' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
 	
 	    <div class='form-row mb-4'>
 	        <div class='col'>
 	            <!-- Product name -->
-	            <input name='productName' type='text' id='productName' class='form-control' placeholder='Product name'>
+	            <input value="<%= product.getName() %>" name='productName' type='text' id='productName' class='form-control' placeholder='Product name'>
             </div>
             <div class='col'>
             <!-- Cattegory -->
                 <label style="color: white;" for="cattegory">Cattegory:</label>
                 <select id="cattegory" name="cattegoryProduct">
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
+                  <option value="Home">Home</option>
+                  <option value="Toy">Toys</option>
+                  <option value="Games">Games</option>
+                  <option value="Clothes">Clothes</option>
                 </select>
             </div>
 	    </div>
 	
 	    <!-- Description -->
-	    <textarea name='description' type='text' id='defaultRegisterFormEmail' class='form-control mb-4' placeholder='Description of the product'></textarea>
+	    <textarea value="<%= product.getDescription() %>" name='description' type='text' id='defaultRegisterFormEmail' class='form-control mb-4' placeholder='Description of the product'></textarea>
 	
 	     <!-- File Button --> 
 <div class="form-group">
     <label class="col-md-4 control-label" style="color: white;" for="filebutton">Product Image</label>
     <div class="col-md-4">
-      <input style="color: white;" name="image" id="filebutton" name="filebutton" class="input-file" type="file">
+      <input value="" style="color: white;" name="image" id="filebutton" name="filebutton" class="input-file" type="file">
     </div>
   </div>
 
         <div  style="padding-top: 20px; color: white;">
-        Price: <input style=" border-radius: 4px; background: white; text-align: center; width: 15%;" name="price" type="number" min="1" step="any"/> €
+        Price: <input value="<%= product.getPrice() %>" style=" border-radius: 4px; background: white; text-align: center; width: 15%;" name="price" type="number" min="1" step="any"/> €
     </div>
 
 	    <!-- Sign up button -->
