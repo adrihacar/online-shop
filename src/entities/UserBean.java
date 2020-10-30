@@ -2,15 +2,15 @@ package entities;
 
 public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	
-	private int idUser;
+	private int id;
 	
 	private String name;
 	
 	private String surname;
 	
-	private String username;
+	private String email;
 	
-	private String city;
+	private String location;
 	
 	private String password;
 	
@@ -18,11 +18,11 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	public UserBean() {
 	}
 
-	public UserBean(String name, String surname, String username, String city, String password) {
+	public UserBean(String name, String surname, String username, String location, String password) {
 		this.name = name;
 		this.surname = surname;
-		this.username = username;
-		this.city = city;
+		this.email = username;
+		this.location = location;
 		this.password = password;
 	}
 
@@ -30,13 +30,13 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	 * @return the id
 	 */
 	public int getId() {
-		return idUser;
+		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
-		this.idUser = id;
+		this.id = id;
 	}
 
 	/**
@@ -70,29 +70,29 @@ public class UserBean { // extends org.w3c.tools.jdbc.JdbcBeanAdapter{
 	/**
 	 * @return the username
 	 */
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
 	/**
 	 * @param username the username to set
 	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String username) {
+		this.email = username;
 	}
 
 	/**
-	 * @return the city
+	 * @return the location
 	 */
-	public String getCity() {
-		return city;
+	public String getLocation() {
+		return location;
 	}
 
 	/**
-	 * @param city the city to set
+	 * @param location the location to set
 	 */
-	public void setCity(String city) {
-		this.city = city;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	/**
