@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Query;
+import javax.persistence.Table;
 
 import org.jboss.logging.Param;
 
@@ -19,9 +20,13 @@ import com.sun.istack.NotNull;
 @Entity
 @NamedQueries({
 	@NamedQuery(name="findAllProductsBySeller",
-			query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller")
+			query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller"),
+	
+	@NamedQuery(name="getAllProducts",
+	query="SELECT p FROM ProductBean p")
 	
 })
+@Table(name="PRODUCTS")
 public class ProductBean {
 	
 	public ProductBean() {

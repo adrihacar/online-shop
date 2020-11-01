@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -55,10 +56,13 @@ public class addProductServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("Soy concha, entro");
 		String productName = request.getParameter("productName");
 		String cattegoryProduct = request.getParameter("cattegoryProduct");
 		String description = request.getParameter("description");
 		String price = request.getParameter("price");
+		String image = request.getParameter("image");
+		System.out.println(image);
 		
 		ProductBean product = new ProductBean();
 		
@@ -68,9 +72,9 @@ public class addProductServlet extends HttpServlet {
 			//ERROR
 		}
 		else {
-			product.setSeller(((Integer) objectUser).intValue());
+			//product.setSeller(((Integer) objectUser).intValue());
 		}
-		
+		product.setSeller(1);
 		product.setName(productName);
 		product.setPrice(Integer.parseInt(price));
 		product.setCategory(Integer.parseInt(cattegoryProduct));
@@ -87,8 +91,8 @@ public class addProductServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		config.getServletContext().getRequestDispatcher("/dashboard.jsp").forward(request, response);
-
+		response.sendRedirect("/online_shop/dashboard.jsp");
+		return;
 	}
 
 }

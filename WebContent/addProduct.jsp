@@ -45,7 +45,7 @@
     </header>
  	
 		<!-- Default form Add product -->
-	<form action='/addProdcut' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
+	<form action='/online_shop/addProduct' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
 	
@@ -55,9 +55,9 @@
 	            <input name='productName' type='text' id='productName' class='form-control' placeholder='Product name'>
             </div>
             <div class='col'>
-            <!-- Cattegory -->
-                <label style="color: white;" for="cattegory">Cattegory:</label>
-                <select id="cattegory" name="cattegoryProduct">
+            <!-- Category -->
+                <label style="color: white" for="category">Category:</label>
+                <select id="category" name="cattegoryProduct">
                   <option value="0">Home</option>
                   <option value="1">Toys</option>
                   <option value="2">Games</option>
@@ -73,12 +73,12 @@
 <div class="form-group">
     <label class="col-md-4 control-label" style="color: white;" for="filebutton">Product Image</label>
     <div class="col-md-4">
-      <input style="color: white;" name="image" id="filebutton" name="filebutton" class="input-file" type="file">
+      <input style="color: white;" onchange="loadFile(event)" id="filebutton" name="image" class="input-file" type="file">
     </div>
   </div>
 
         <div  style="padding-top: 20px; color: white;">
-        Price: <input style=" border-radius: 4px; background: white; text-align: center; width: 15%;" name="price" type="number" min="1" step="any"/> €
+        Price: <input style=" border-radius: 4px; background: white; text-align: center; width: 20%;" name="price" type="number" min="1" step="any"/> €
     </div>
 
 	    <!-- Sign up button -->
