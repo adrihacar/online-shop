@@ -1,6 +1,7 @@
 package entities;
 
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.List;
 
@@ -23,7 +24,13 @@ import com.sun.istack.NotNull;
 			query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller"),
 	
 	@NamedQuery(name="getAllProducts",
-	query="SELECT p FROM ProductBean p")
+	query="SELECT p FROM ProductBean p"), 
+
+	@NamedQuery(name="getProductsStatus",
+	query="SELECT p FROM ProductBean p WHERE p.status=:custStatus"), 
+	
+	@NamedQuery(name="getProductsStatusBySeller",
+	query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller AND p.status=:custStatus"), 
 	
 })
 @Table(name="PRODUCTS")
@@ -34,7 +41,7 @@ public class ProductBean {
 	}
 	
 	@Id
-	@GeneratedValue (strategy = AUTO)
+	@GeneratedValue (strategy = IDENTITY)
 	private int id;
 	
 	@Column(name="seller")

@@ -24,7 +24,9 @@
             <div class="collapse navbar-collapse" id="navbarsExample09">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
-                  <a class="nav-link" href="./dashboard.jsp">Home </a>
+                <form action='/online_shop/dashboard' method='get'>
+                  <button class="nav-link" type='submit'>Home </button>
+                </form>
                 </li>
                 <li class="nav-item active">
                   <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
@@ -35,7 +37,7 @@
               </ul>
               <form class="form-inline my-2 my-md-0">
                 <div style="padding-right: 20px;">
-                  <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
+                  <a type="button" class="btn btn-outline-warning" href="./cart.jsp">My cart</a>
                 </div>
                 <input class="form-control" type="text" placeholder="Search" aria-label="Search">
                 <a href="./search.jsp" class="btn btn-primary nav-item">Search</a>

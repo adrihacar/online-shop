@@ -1,10 +1,12 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -91,7 +93,13 @@ public class addProductServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		response.sendRedirect("/online_shop/dashboard.jsp");
+//		Query products = entityManager.createNamedQuery("getProductsStatus").setParameter("custStatus",0);
+//		List results = products.getResultList();
+//		request.setAttribute("products", results);
+		
+		RequestDispatcher rd = request.getRequestDispatcher("/dashboard");
+		rd.forward(request, response);
+			
 		return;
 	}
 

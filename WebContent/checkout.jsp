@@ -42,7 +42,9 @@
         <div class="collapse navbar-collapse" id="navbarsExample09">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="./dashboard.jsp">Home <span class="sr-only">(current)</span></a>
+              <form action='/online_shop/dashboard' method='get'>
+                  <button class="nav-link" type='submit'>Home </button>
+                </form>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="./addProduct.jsp">Add product</a>

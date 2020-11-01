@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    
+    import = "entities.ProductBean"
+    import = "java.util.List;"
+    
+    %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -41,7 +46,9 @@
           <div class="collapse navbar-collapse" id="navbarsExample09">
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="./dashboard.jsp">Home <span class="sr-only">(current)</span></a>
+                <form action='/online_shop/dashboard' method='get'>
+                  <button class="nav-link" type='submit'>Home </button>
+                </form>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="./addProduct.jsp">Add product</a>
@@ -75,17 +82,21 @@
     <div class="container back-box">
 
       <div class="row">
+      <% Object productsObject = request.getAttribute("products");
+    	 List<ProductBean> products = (List<ProductBean>)productsObject;
+         for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
             <div class="card-body">
-              <h4>Product name</h4>
-              <p class="card-text">Description of the product</p>
+              <h4><%= products.get(i).getName() %></h4>
+              <p class="card-text"><%= products.get(i).getDescription() %></p>
+              <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <button class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
+                      <button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
                     </div>
                     <input type="number" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
                   </div>
@@ -94,7 +105,7 @@
             </div>
           </div>
         </div>
-        
+        <% } %>
       </div>
     </div>
   </div>
