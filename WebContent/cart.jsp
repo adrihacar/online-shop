@@ -35,6 +35,11 @@
                 <li class="nav-item">
                   <a class="nav-link" href="./user-config.jsp">My user</a>
                 </li>
+                <li class="nav-item">
+			<form action='/online_shop/Catalog' method='get'>
+                <button class="nav-link" type='submit'>Catalog</button>
+			</form>
+            </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
                 <div style="padding-right: 20px;">

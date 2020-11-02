@@ -99,9 +99,9 @@
 			  <form action='/online_shop/editProduct' method='get'>
                 	<button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
 		      </form>
-                <form action='/deleteProduct' method='post'>
-                    <button name="delete" value="" type="button" class="close" aria-label="Close">
- 			<span aria-hidden="true" type='submit' style="color=red">Delete ×</span>
+                <form action='/online_shop/deleteProduct' method='post'>
+                    <button type='submit' name="idProduct" value="<%= products.get(i).getId() %>" type="button" class="close" aria-label="Close">
+ 			<span aria-hidden="true" style="color=red">Delete ×</span>
 	            </button>
 		    </form>
                 </div>
