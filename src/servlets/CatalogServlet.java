@@ -3,10 +3,11 @@ package servlets;
 import java.io.IOException;
 import java.util.List;
 
-import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import entities.ProductBean;
 
 /**
- * Servlet implementation class ProductsServlet
+ * Servlet implementation class CatalogServlet
  */
-@WebServlet({ "/dashboard" })
-public class ProductsServlet extends HttpServlet {
+@WebServlet("/Catalog")
+public class CatalogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ProductBean productBean = new ProductBean();
 	
@@ -29,24 +30,27 @@ public class ProductsServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ProductsServlet() {
+    public CatalogServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest reTODO Auto-generated method stubquest, HttpServletResponse response)
+	 * @see Servlet#init(ServletConfig)
+	 */
+	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Query products = entityManager.createNamedQuery("getProductsStatus").setParameter("custStatus",0);
+		Query products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 0);
 		List results = products.getResultList();
 		request.setAttribute("products", results);
 		
-		System.out.println("Operacion realizada");
-		
-		//response.sendRedirect("/online_shop/dashboard.jsp");
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/dashboard.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("/catalog.jsp");
 		rd.forward(request, response);
 	}
 
@@ -54,7 +58,8 @@ public class ProductsServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//TODO
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

@@ -58,7 +58,6 @@ public class addProductServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Soy concha, entro");
 		String productName = request.getParameter("productName");
 		String cattegoryProduct = request.getParameter("cattegoryProduct");
 		String description = request.getParameter("description");
@@ -78,7 +77,7 @@ public class addProductServlet extends HttpServlet {
 		}
 		product.setSeller(1);
 		product.setName(productName);
-		product.setPrice(Integer.parseInt(price));
+		product.setPrice(Double.parseDouble(price));
 		product.setCategory(Integer.parseInt(cattegoryProduct));
 		product.setDescription(description);
 		product.setImage("");
@@ -96,9 +95,10 @@ public class addProductServlet extends HttpServlet {
 //		Query products = entityManager.createNamedQuery("getProductsStatus").setParameter("custStatus",0);
 //		List results = products.getResultList();
 //		request.setAttribute("products", results);
+//		RequestDispatcher rd = request.getRequestDispatcher("/dashboard");
+//		rd.forward(request, response);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/dashboard");
-		rd.forward(request, response);
+		response.sendRedirect("/online_shop/dashboard");
 			
 		return;
 	}
