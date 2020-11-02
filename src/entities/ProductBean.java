@@ -32,6 +32,9 @@ import com.sun.istack.NotNull;
 	@NamedQuery(name="getProductsStatusBySeller",
 	query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller AND p.status=:custStatus"), 
 	
+	@NamedQuery(name="updateProduct",
+	query="UPDATE ProductBean p SET p.name=newName, p.description=newDescription, p.price=newPrice, p.category=newCategory WHERE p.id=:custId")
+	
 })
 @Table(name="PRODUCTS")
 public class ProductBean {

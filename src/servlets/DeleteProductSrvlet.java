@@ -1,29 +1,25 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
 
 /**
- * Servlet implementation class addProductServlet
+ * Servlet implementation class DeleteProductSrvlet
  */
-@WebServlet("/addProduct")
-public class addProductServlet extends HttpServlet {
+@WebServlet({ "/DeleteProductSrvlet", "/deleteProduct" })
+public class DeleteProductSrvlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
@@ -32,19 +28,21 @@ public class addProductServlet extends HttpServlet {
 	
 	@Resource
 	UserTransaction ut;
-       
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public addProductServlet() {
+    public DeleteProductSrvlet() {
         super();
         // TODO Auto-generated constructor stub
     }
-    
-    @Override
+
+	/**
+	 * @see Servlet#init(ServletConfig)
+	 */
 	public void init(ServletConfig config) throws ServletException {
-		this.config = config;
-    }
+		// TODO Auto-generated method stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -58,49 +56,24 @@ public class addProductServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String productName = request.getParameter("productName");
-		String cattegoryProduct = request.getParameter("cattegoryProduct");
-		String description = request.getParameter("description");
-		String price = request.getParameter("price");
-		String image = request.getParameter("image");
-		System.out.println(image);
 		
-		ProductBean product = new ProductBean();
-		
-		HttpSession session = request.getSession(true);
-		Object objectUser = session.getAttribute("user");
-		if(objectUser == null) {
-			//ERROR
-		}
-		else {
-			//product.setSeller(((Integer) objectUser).intValue());
-		}
-		product.setSeller(1);
-		product.setName(productName);
-		product.setPrice(Double.parseDouble(price));
-		product.setCategory(Integer.parseInt(cattegoryProduct));
-		product.setDescription(description);
-		product.setImage("");
+		ProductBean product = entityManager.find(ProductBean.class, Integer.parseInt(request.getParameter("idProduct")));
 		
 		try {
 			ut.begin();
 		
-			entityManager.persist(product);
+			if (!entityManager.contains(product)) {
+				product = entityManager.merge(product);
+			}
+			entityManager.remove(product);
 			
 			ut.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-//		Query products = entityManager.createNamedQuery("getProductsStatus").setParameter("custStatus",0);
-//		List results = products.getResultList();
-//		request.setAttribute("products", results);
-//		RequestDispatcher rd = request.getRequestDispatcher("/dashboard");
-//		rd.forward(request, response);
+		response.sendRedirect("/online_shop/Catalog");
 		
-		response.sendRedirect("/online_shop/dashboard");
-			
-		return;
 	}
 
 }

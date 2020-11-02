@@ -37,6 +37,11 @@
                 <li class="nav-item">
                   <a class="nav-link" href="./user-config.jsp">My user</a>
                 </li>
+                <li class="nav-item">
+			<form action='/online_shop/Catalog' method='get'>
+                <button class="nav-link" type='submit'>Catalog</button>
+			</form>
+            </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
                 <div style="padding-right: 20px;">
@@ -50,12 +55,12 @@
     </header>
     
     <% 
-    Object object = request.getAttribute("prodcut");
+    Object object = request.getAttribute("product");
     ProductBean product = (ProductBean) object;
     %>
  	
 		<!-- Default form register -->
-	<form action='/editProdcut' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
+	<form action='/online_shop/editProduct' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
 	
@@ -77,7 +82,7 @@
 	    </div>
 	
 	    <!-- Description -->
-	    <textarea value="<%= product.getDescription() %>" name='description' type='text' id='defaultRegisterFormEmail' class='form-control mb-4' placeholder='Description of the product'></textarea>
+	    <textarea name='description' type='text' id='defaultRegisterFormEmail' class='form-control mb-4' placeholder='Description of the product'><%= product.getDescription() %></textarea>
 	
 	     <!-- File Button --> 
 <div class="form-group">
@@ -88,11 +93,11 @@
   </div>
 
         <div  style="padding-top: 20px; color: white;">
-        Price: <input value="<%= product.getPrice() %>" style=" border-radius: 4px; background: white; text-align: center; width: 15%;" name="price" type="number" min="1" step="any"/> €
+        Price: <input value="<%= product.getPrice() %>" style=" border-radius: 4px; background: white; text-align: center; width: 20%;" name="price" type="number" min="1" step="any"/> €
     </div>
 
 	    <!-- Sign up button -->
-	    <button class='btn btn-warning my-4 btn-block' type='submit'>Add Product</button>
+	    <button name="idProduct" value="<%= product.getId() %>" class='btn btn-warning my-4 btn-block' type='submit'>Edit Product</button>
 	
 	    <hr>
 	

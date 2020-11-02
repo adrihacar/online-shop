@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    
+    import = "entities.ProductBean"
+    import = "java.util.List;"
+    
+    %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -51,11 +56,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="./user-config.jsp">My user</a>
               </li>
-		<li class="nav-item active">
-		<form action='/catalogDisplay' method='post'>
-                	<a class="nav-link" type='submit'>Catalog<span class="sr-only">(current)</span></a>
-		</form>
-              </li>
+			<li class="nav-item active">
+			<form action='/online_shop/Catalog' method='get'>
+                <button class="nav-link" type='submit'>Catalog</button>
+			</form>
+            </li>
             </ul>
             <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
@@ -80,25 +85,30 @@
     <div class="container back-box">
 
       <div class="row">
+      <% Object productsObject = request.getAttribute("products");
+    	 List<ProductBean> products = (List<ProductBean>)productsObject;
+         for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
             <div class="card-body">
-              <h4>Product name</h4>
-              <p class="card-text">Description of the product</p>
+              <h4><%= products.get(i).getName() %></h4>
+              <p class="card-text"><%= products.get(i).getDescription() %></p>
+              <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
               <div class="d-flex justify-content-between align-items-center">
-		<form action='/deleteProduct' method='post'>
-                	<button name="edit" value="" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
-		</form>
-                <form action='/deleteProduct' method='post'>
-                    <button name="delete" value="" type="button" class="close" aria-label="Close">
- 			<span aria-hidden="true" type='submit' style="color=red">Delete ×</span>
+			  <form action='/online_shop/editProduct' method='get'>
+                	<button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
+		      </form>
+                <form action='/online_shop/deleteProduct' method='post'>
+                    <button type='submit' name="idProduct" value="<%= products.get(i).getId() %>" type="button" class="close" aria-label="Close">
+ 			<span aria-hidden="true" style="color=red">Delete ×</span>
 	            </button>
-		</form>
+		    </form>
                 </div>
               </div>
             </div>
           </div>
+          <% } %>
         </div>
        </div>
       </div>
