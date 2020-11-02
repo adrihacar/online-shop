@@ -44,7 +44,7 @@ public class UserDAOImp implements UserDAO{
 			}else {
 				//check if there is a row with that value in the database
 				st = con.createStatement();
-				rs =st.executeQuery("SELECT email FROM USERS WHERE email="+email);
+				rs =st.executeQuery("SELECT email FROM users WHERE email="+email);
 				
 				if(rs.first()) {
 					exist=true;
@@ -72,7 +72,7 @@ public class UserDAOImp implements UserDAO{
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
 				st = con.createStatement();
-				st.executeUpdate("INSERT INTO USERS(name, surname, password, email, location, salt) VALUES ('" + user.getName() + "', '" + user.getSurname() +"', '"+ user.getPassword()+ "', '"  + user.getEmail()+"', '"+ user.getLocation() +"', '"+ user.getSalt()+"')");
+				st.executeUpdate("INSERT INTO users(name, surname, password, email, location, salt) VALUES ('" + user.getName() + "', '" + user.getSurname() +"', '"+ user.getPassword()+ "', '"  + user.getEmail()+"', '"+ user.getLocation() +"', '"+ user.getSalt()+"')");
 				
 				st.close();
 				con.close();
@@ -127,7 +127,7 @@ public class UserDAOImp implements UserDAO{
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
 				st = con.createStatement();
-				st.executeUpdate("UPDATE USERS SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',password = '"+user.getPassword() + "', email ='" +user.getEmail() + "', location ='"+user.getLocation()+ "WHERE id="+id);
+				st.executeUpdate("UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',password = '"+user.getPassword() + "', email ='" +user.getEmail() + "', location ='"+user.getLocation()+ "WHERE id="+id);
 		
 				st.close();
 				con.close();
@@ -162,7 +162,7 @@ public class UserDAOImp implements UserDAO{
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
 				st = con.createStatement();
-				rs = st.executeQuery("SELECT * FROM USERS WHERE id = "+ id);
+				rs = st.executeQuery("SELECT * FROM users WHERE id = "+ id);
 				
 				if(rs.first()) {
 					idd= rs.getInt("id");	
