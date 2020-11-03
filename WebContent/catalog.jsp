@@ -71,6 +71,7 @@
             </form>
           </div>
         </nav>
+      </div>
 </header>
 
 <main role="main" class="back-box">
@@ -83,7 +84,16 @@
 
   <div class="album py-5 bg-light back-box">
     <div class="container back-box">
-
+     <% if(request.getAttribute("sold").equals("false")){ %>
+        <form action='/online_shop/Catalog' method='get'>
+           <button type='submit' name="sold" value="true" class="btn btn-dark">Show sold</button>
+        </form>
+     <% } else { %>
+     	<form action='/online_shop/Catalog' method='get'>
+           <button type='submit' name="sold" value="false" class="btn btn-dark">Show on sale</button>
+        </form>
+     <% } %>
+     
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
     	 List<ProductBean> products = (List<ProductBean>)productsObject;
@@ -92,6 +102,9 @@
           <div class="card mb-4 shadow-sm">
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
             <div class="card-body">
+            <% if(request.getAttribute("sold") != null && request.getAttribute("sold").equals("true")){ %>
+            	<h4 style="color: red; text-align: end;">SOLD</h4>
+            <% } %>
               <h4><%= products.get(i).getName() %></h4>
               <p class="card-text"><%= products.get(i).getDescription() %></p>
               <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
@@ -112,8 +125,6 @@
         </div>
        </div>
       </div>
-    </div>
-  </div>
 
 </main>
 

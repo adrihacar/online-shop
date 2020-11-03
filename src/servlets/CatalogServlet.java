@@ -46,7 +46,16 @@ public class CatalogServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Query products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 0);
+		Query products;
+		
+		if(request.getParameter("sold") == null || request.getParameter("sold").equals("false")){
+			products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 0);
+			request.setAttribute("sold", "false");
+		} else {
+			products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 1);
+			request.setAttribute("sold", "true");
+		}
+		System.out.println(request.getAttribute("sold"));
 		List results = products.getResultList();
 		request.setAttribute("products", results);
 		
