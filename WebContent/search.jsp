@@ -10,7 +10,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your Catalog - Online shop</title>
+    <title>Search - Online shop</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/cover/">
     <!-- Custom styles for this template -->
