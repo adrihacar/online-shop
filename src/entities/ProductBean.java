@@ -29,6 +29,9 @@ import com.sun.istack.NotNull;
 	@NamedQuery(name="getProductsStatus",
 	query="SELECT p FROM ProductBean p WHERE p.status=:custStatus"), 
 	
+	@NamedQuery(name="getProductsCategory",
+	query="SELECT p FROM ProductBean p WHERE p.category=:custCategory"), 
+	
 	@NamedQuery(name="getProductsStatusBySeller",
 	query="SELECT p FROM ProductBean p WHERE p.seller=:custSeller AND p.status=:custStatus"), 
 	
