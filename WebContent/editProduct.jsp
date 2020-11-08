@@ -72,7 +72,7 @@
     %>
  	
 		<!-- Default form register -->
-	<form action='/online_shop/editProduct' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
+	<form action='/online_shop/editProduct' enctype="multipart/form-data" method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
 	

@@ -2,7 +2,10 @@
     pageEncoding="UTF-8"
     
     import = "entities.ProductBean"
-    import = "java.util.List;"
+    import = "java.util.List"
+    import = "java.util.ArrayList"
+    import = "org.apache.commons.codec.binary.StringUtils" 
+    import = "org.apache.commons.codec.binary.Base64"
     
     %>
 <!doctype html>
@@ -110,8 +113,11 @@
          for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            <div class="card-body">
+            <img class="bd-placeholder-img card-img-top" src="<% StringBuilder sb = new StringBuilder();
+						sb.append("data:image/png;base64,");
+						sb.append(StringUtils.newStringUtf8(Base64.encodeBase64(products.get(i).getImage(), false)));
+						out.print(sb.toString()); %>">
+						 <div class="card-body">
             <% if(request.getAttribute("sold") != null && request.getAttribute("sold").equals("true")){ %>
             	<h4 style="color: red; text-align: end;">SOLD</h4>
             <% } %>

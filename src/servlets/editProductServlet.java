@@ -8,11 +8,13 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
@@ -21,6 +23,7 @@ import entities.ProductBean;
  * Servlet implementation class editProductServlet
  */
 @WebServlet("/editProduct")
+@MultipartConfig
 public class editProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
@@ -69,6 +72,7 @@ public class editProductServlet extends HttpServlet {
 		int cattegoryProduct = Integer.parseInt(request.getParameter("cattegoryProduct"));
 		String description = request.getParameter("description");
 		double price = Double.parseDouble(request.getParameter("price"));
+		Part filePart = request.getPart("image");
 		
 		
 		HttpSession session = request.getSession(true);
@@ -85,7 +89,9 @@ public class editProductServlet extends HttpServlet {
 		product.setPrice(price);
 		product.setCategory(cattegoryProduct);
 		product.setDescription(description);
-		product.setImage("");
+		byte[] data = new byte[(int) filePart.getSize()];
+	    filePart.getInputStream().read(data, 0, data.length);
+	    product.setImage(data);
 		
 		try {
 			ut.begin();

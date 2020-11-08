@@ -71,13 +71,13 @@ public class ProductBean {
 	private String description;
 	
 	@Column(name="image")
-	private String image;
+	private byte[] image;
 	
 	@Column(name="price")
 	@NotNull
 	private double price;
 
-	public ProductBean(int seller, String name, int status, int category, String description, String image,
+	public ProductBean(int seller, String name, int status, int category, String description, byte[] image,
 			double price) {
 		this.seller = seller;
 		this.name = name;
@@ -175,14 +175,14 @@ public class ProductBean {
 	/**
 	 * @return the image
 	 */
-	public String getImage() {
+	public byte[] getImage() {
 		return image;
 	}
 
 	/**
 	 * @param image the image to set
 	 */
-	public void setImage(String image) {
+	public void setImage(byte[] image) {
 		this.image = image;
 	}
 

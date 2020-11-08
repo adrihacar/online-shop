@@ -64,7 +64,7 @@
     </header>
  	
 		<!-- Default form Add product -->
-	<form action='/online_shop/addProduct' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
+	<form action='/online_shop/addProduct' enctype="multipart/form-data" method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
 	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
 	
@@ -92,7 +92,7 @@
 <div class="form-group">
     <label class="col-md-4 control-label" style="color: white;" for="filebutton">Product Image</label>
     <div class="col-md-4">
-      <input style="color: white;" onchange="loadFile(event)" id="filebutton" name="image" class="input-file" type="file">
+      <input style="color: white;" name="image" class="input-file" type="file">
     </div>
   </div>
 
