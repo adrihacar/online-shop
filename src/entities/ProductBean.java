@@ -39,7 +39,7 @@ import com.sun.istack.NotNull;
 	query="UPDATE ProductBean p SET p.name=newName, p.description=newDescription, p.price=newPrice, p.category=newCategory WHERE p.id=:custId")
 	
 })
-@Table(name="PRODUCTS")
+@Table(name="products")
 public class ProductBean {
 	
 	public ProductBean() {

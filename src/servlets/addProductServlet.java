@@ -20,6 +20,7 @@ import javax.servlet.http.Part;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class addProductServlet
@@ -30,11 +31,15 @@ public class addProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
+	/*
 	@PersistenceContext(unitName="online_shop")
 	private EntityManager entityManager;
 	
 	@Resource
 	UserTransaction ut;
+	*/
+	
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -87,11 +92,7 @@ public class addProductServlet extends HttpServlet {
 	    product.setImage(data);
 	    
 		try {
-			ut.begin();
-		
-			entityManager.persist(product);
-			
-			ut.commit();
+			productDAO.insert(product);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

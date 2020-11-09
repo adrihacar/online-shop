@@ -12,5 +12,6 @@ public interface ProductDAO {
 	public List<ProductBean> getProductsStatus(int status);
 	public List<ProductBean> getProductsStatusBySeller(int custSeller, int custStatus);
 	public ProductBean findByID(int id);
+	public List<ProductBean> getProductByCategory(int category);
 
 }

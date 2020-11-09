@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class ProductsServlet
@@ -25,8 +26,7 @@ public class ProductsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ProductBean productBean = new ProductBean();
 	
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,8 +40,7 @@ public class ProductsServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest reTODO Auto-generated method stubquest, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Query products = entityManager.createNamedQuery("getProductsStatus").setParameter("custStatus",0);
-		List results = products.getResultList();
+		List<ProductBean> results = productDAO.getProductsStatus(0);
 		request.setAttribute("products", results);
 		
 		System.out.println("Operacion realizada");

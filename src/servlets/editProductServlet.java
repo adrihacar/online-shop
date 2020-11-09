@@ -18,6 +18,7 @@ import javax.servlet.http.Part;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class editProductServlet
@@ -28,11 +29,7 @@ public class editProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
-	
-	@Resource
-	UserTransaction ut;
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -54,7 +51,7 @@ public class editProductServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ProductBean product = entityManager.find(ProductBean.class, Integer.parseInt(request.getParameter("idProduct")));
+		ProductBean product = productDAO.findByID(Integer.parseInt(request.getParameter("idProduct")));
 		request.setAttribute("product", product);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/editProduct.jsp");
@@ -66,15 +63,13 @@ public class editProductServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ProductBean product = entityManager.find(ProductBean.class, Integer.parseInt(request.getParameter("idProduct")));
+		ProductBean product = productDAO.findByID(Integer.parseInt(request.getParameter("idProduct")));
 		
 		String productName = request.getParameter("productName");
 		int cattegoryProduct = Integer.parseInt(request.getParameter("cattegoryProduct"));
 		String description = request.getParameter("description");
 		double price = Double.parseDouble(request.getParameter("price"));
-		Part filePart = request.getPart("image");
-		
-		
+		Part filePart = request.getPart("image");		
 		HttpSession session = request.getSession(true);
 		Object objectUser = session.getAttribute("user");
 		if(objectUser == null) {
@@ -89,17 +84,13 @@ public class editProductServlet extends HttpServlet {
 		product.setPrice(price);
 		product.setCategory(cattegoryProduct);
 		product.setDescription(description);
-		byte[] data = new byte[(int) filePart.getSize()];
-	    filePart.getInputStream().read(data, 0, data.length);
-	    product.setImage(data);
-		
+		if(filePart.getSize() != 0) {
+			byte[] data = new byte[(int) filePart.getSize()];
+		    filePart.getInputStream().read(data, 0, data.length);
+		    product.setImage(data);
+		}
 		try {
-			ut.begin();
-		
-			entityManager.merge(product);
-			//entityManager.createNamedQuery("updateProduct").setParameter("newName", productName).setParameter("newDescription", description).setParameter("newCategory", cattegoryProduct).setParameter("newPrice", price).setParameter("custId", Integer.parseInt(request.getParameter("idProduct")));
-			
-			ut.commit();
+			productDAO.update(product);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

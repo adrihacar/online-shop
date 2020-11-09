@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class CatalogServlet
@@ -24,8 +25,7 @@ public class CatalogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	ProductBean productBean = new ProductBean();
 	
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -46,16 +46,15 @@ public class CatalogServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Query products;
+		List results;
 		
 		if(request.getParameter("sold") == null || request.getParameter("sold").equals("false")){
-			products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 0);
+			results = productDAO.getProductsStatusBySeller(1, 0);
 			request.setAttribute("sold", "false");
 		} else {
-			products = entityManager.createNamedQuery("getProductsStatusBySeller").setParameter("custSeller",1).setParameter("custStatus", 1);
+			results = productDAO.getProductsStatusBySeller(1, 1);
 			request.setAttribute("sold", "true");
 		}
-		List results = products.getResultList();
 		request.setAttribute("products", results);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/catalog.jsp");

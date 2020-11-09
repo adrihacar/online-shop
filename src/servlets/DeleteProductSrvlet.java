@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class DeleteProductSrvlet
@@ -23,11 +24,7 @@ public class DeleteProductSrvlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
-	
-	@Resource
-	UserTransaction ut;
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,17 +54,9 @@ public class DeleteProductSrvlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ProductBean product = entityManager.find(ProductBean.class, Integer.parseInt(request.getParameter("idProduct")));
-		
+		ProductBean product = productDAO.findByID(Integer.parseInt(request.getParameter("idProduct")));
 		try {
-			ut.begin();
-		
-			if (!entityManager.contains(product)) {
-				product = entityManager.merge(product);
-			}
-			entityManager.remove(product);
-			
-			ut.commit();
+			productDAO.delte(product);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

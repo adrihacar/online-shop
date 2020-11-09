@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entities.ProductBean;
+import entities.ProductDAOImpl;
 
 /**
  * Servlet implementation class SearchServlet
@@ -24,8 +25,7 @@ import entities.ProductBean;
 public class SearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -48,17 +48,16 @@ public class SearchServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String text = request.getParameter("sarchText");
 		int categoryProduct = Integer.parseInt(request.getParameter("cattegoryProductSearch"));
-		Query products;
+		List<ProductBean> products;
 		if(categoryProduct==-1) {
-			products = entityManager.createNamedQuery("getAllProducts");
+			products = productDAO.getAllProducts();
 		} else {
-			products = entityManager.createNamedQuery("getProductsCategory").setParameter("custCategory", categoryProduct);
+			products = productDAO.getProductByCategory(categoryProduct);
 		}
-		List<ProductBean> results = new ArrayList<ProductBean>();;
-		List<ProductBean> productsCompare = products.getResultList();
-		for(int i = 0; i < productsCompare.size(); i++) {
-			if(productsCompare.get(i).getName().contains(text)) {
-				results.add(productsCompare.get(i));
+		List<ProductBean> results = new ArrayList<ProductBean>();
+		for(int i = 0; i < products.size(); i++) {
+			if(products.get(i).getName().toLowerCase().contains(text.toLowerCase())) {
+				results.add(products.get(i));
 			}
 		}
 		request.setAttribute("products", results);
