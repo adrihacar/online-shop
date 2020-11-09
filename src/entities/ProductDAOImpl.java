@@ -36,6 +36,7 @@ public class ProductDAOImpl implements ProductDAO {
 		}
 		entityManager.remove(product);
 		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 
 	@Override
@@ -43,8 +44,8 @@ public class ProductDAOImpl implements ProductDAO {
 		EntityManager entityManager = emf.createEntityManager();
 		entityManager.getTransaction().begin();	
 		entityManager.merge(product);
-		entityManager.getTransaction().commit();	
-		
+		entityManager.getTransaction().commit();
+		entityManager.close();		
 	}
 
 	@Override

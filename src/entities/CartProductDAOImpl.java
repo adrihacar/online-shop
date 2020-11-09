@@ -11,48 +11,46 @@ import javax.transaction.UserTransaction;
 public class CartProductDAOImpl implements CartProductDAO{
 
 	
-	private EntityManager entityManager;
+	private EntityManagerFactory emf;
 	
-	private UserTransaction ut;
-	
-	public CartProductDAOImpl() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("online_shop");
-		this.entityManager = emf.createEntityManager();
+	public CartProductDAOImpl(String unidadDePersistencia)
+	{
+		this.emf = Persistence.createEntityManagerFactory(unidadDePersistencia);
 	}
-
-	public CartProductDAOImpl(EntityManager entityManager, UserTransaction ut) {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("online_shop");
-		this.entityManager = emf.createEntityManager();
-		this.ut = ut;
-	}
-	
 	
 	@Override
 	public void insert(CartProductBean cartproduct) throws Exception {
-		ut.begin();	
+		EntityManager entityManager = emf.createEntityManager();
+		entityManager.getTransaction().begin();	
 		entityManager.persist(cartproduct);
-		ut.commit();
+		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 
 	@Override
 	public void delete(CartProductBean cartproduct) throws Exception {
-		ut.begin();
+		EntityManager entityManager = emf.createEntityManager();
+		entityManager.getTransaction().begin();	
 		if (!entityManager.contains(cartproduct)) {
 			cartproduct = entityManager.merge(cartproduct);
 		}
 		entityManager.remove(cartproduct);
-		ut.commit();
+		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 
 	@Override
 	public void update(CartProductBean cartproduct) throws Exception {
-		ut.begin();
+		EntityManager entityManager = emf.createEntityManager();
+		entityManager.getTransaction().begin();	
 		entityManager.merge(cartproduct);
-		ut.commit();
+		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 
 	@Override
 	public List<CartProductBean> findProductsInCart(int cart) {
+		EntityManager entityManager = emf.createEntityManager();
 		Query cartproductsquery = entityManager.createNamedQuery("findProductsInCart").setParameter("cart",cart);
 		List<CartProductBean> results = cartproductsquery.getResultList();
 		return results;
@@ -60,6 +58,7 @@ public class CartProductDAOImpl implements CartProductDAO{
 
 	@Override
 	public CartProductBean findByID(int id) {
+		EntityManager entityManager = emf.createEntityManager();
 		CartProductBean cartproduct = entityManager.find(CartProductBean.class, id);
 		return cartproduct;
 	}
