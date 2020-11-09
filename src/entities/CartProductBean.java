@@ -6,11 +6,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name="findProductsInCart",
+		query="SELECT cp FROM CartProductBean cp WHERE cp.cart=:cart")
+})
 @Table(name="cartproducts")
 public class CartProductBean {
 	
