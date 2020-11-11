@@ -14,10 +14,16 @@
   </head>
   <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
   <!-- Default form login -->
-	<form action='server-operations.jsp?type=login-user' method='post' class="text-center border border-light p-5 container" style="width:450px; margin-top: 100px;">
+	<form action='/online_shop/login' method='post' class="text-center border border-light p-5 container" style="width:450px; margin-top: 100px;">
 	
 	    <p class="h4 mb-4">Sign in</p>
+		<%
+		String status = request.getParameter("status");
 	
+	    if(status!=null && status.equalsIgnoreCase("error")){%>
+	  	 <div class="alert alert-danger" role="alert">Email or password not correct</div>
+		<!-- <h3 style='color:red;margin:auto;'>Email or password incorrect</h3> -->
+		 <%} %> 
 	    <!-- Email -->
 	    <input type="email" name="Email" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="E-mail">
 	
@@ -36,15 +42,10 @@
 	
 	    <!-- Register -->
 	    <p>Not a member?
-	        <a href="register.jsp?action=create-new-user">Register</a>
+	        <a href="register.jsp">Register</a>
 	    </p>
 	</form>
-	<%
-		String status = request.getParameter("status");
 	
-	  if(status!=null && status.equalsIgnoreCase("error")){%>
-		  <h3 style='color:red;margin:auto;'>email or password incorrect</h3>
-		 <%} %> 
 	
 	
 	<!-- Default form login -->

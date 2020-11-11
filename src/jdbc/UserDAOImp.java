@@ -44,16 +44,16 @@ public class UserDAOImp implements UserDAO{
 			}else {
 				//check if there is a row with that value in the database
 				st = con.createStatement();
-				rs =st.executeQuery("SELECT email FROM users WHERE email="+email);
+				rs =st.executeQuery("SELECT email FROM users WHERE email='"+email+"'");
 				
-				if(rs.first()) {
+				if(rs.next()) {
 					exist=true;
 				}else {
 					exist=false;
 				}
 				st.close();
-				con.close();
 			}
+			con.close();
 			
 		}catch(Exception e) {
 			
@@ -100,7 +100,7 @@ public class UserDAOImp implements UserDAO{
 				st = con.createStatement();
 				rs =st.executeQuery("SELECT email FROM users WHERE email='"+email+"' AND password='"+hashedPassword+"'");
 				
-				if(rs.first()) {
+				if(rs.next()) {
 					exist=true;
 				}else {
 					exist=false;
@@ -164,7 +164,7 @@ public class UserDAOImp implements UserDAO{
 				st = con.createStatement();
 				rs = st.executeQuery("SELECT * FROM users WHERE id = "+ id);
 				
-				if(rs.first()) {
+				if(rs.next()) {
 					idd= rs.getInt("id");	
 					name=rs.getString("name");
 					surname=rs.getString("surname");
@@ -204,21 +204,52 @@ public class UserDAOImp implements UserDAO{
 			if(con == null) {
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
+				System.out.println("entro en else, email: "+email);
 				//check if there is a row with that value in the database
 				st = con.createStatement();
 				rs =st.executeQuery("SELECT salt FROM users WHERE email='"+email+"'");
 				
-				if(rs.first()) {
-					salt= rs.getString("salt");
-					st.close();
-					con.close();
+				if(rs.next()) {
+					salt= rs.getString("salt");		
 				}
-				
+				rs.close();
+				st.close();
 			}
+			con.close();
 		}catch(Exception e) {
 			
 		}
 		
 		return salt;
+		}
+	
+	@Override
+	public int getIdFromEmail(String email) {
+		Connection con;
+		Statement st;
+		ResultSet rs;
+		int id= -1;
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			}else {
+				//check if there is a row with that value in the database
+				st = con.createStatement();
+				rs =st.executeQuery("SELECT id FROM users WHERE email='"+email+"'");
+				
+				if(rs.next()) {
+					id= rs.getInt("id");		
+				}
+				rs.close();
+				st.close();
+			}
+			con.close();
+		}catch(Exception e) {
+			
+		}
+		
+		return id;
 		}
 }

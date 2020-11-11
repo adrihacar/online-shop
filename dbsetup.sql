@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS `onlineShop`;
-USE `onlineShop`;
-
 DROP TABLE IF EXISTS cartproducts;
 DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS products;
