@@ -70,15 +70,11 @@ public class editProductServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		double price = Double.parseDouble(request.getParameter("price"));
 		Part filePart = request.getPart("image");		
+		
 		HttpSession session = request.getSession(true);
-		Object objectUser = session.getAttribute("user");
-		if(objectUser == null) {
-			//ERROR
-		}
-		else {
-			//get seller
-		}
-		product.setSeller(1);
+		int seller = (int) session.getAttribute("user_id");
+		
+		product.setSeller(seller);
 		product.setId(Integer.parseInt(request.getParameter("idProduct")));
 		product.setName(productName);
 		product.setPrice(price);

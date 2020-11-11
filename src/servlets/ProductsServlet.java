@@ -43,10 +43,6 @@ public class ProductsServlet extends HttpServlet {
 		List<ProductBean> results = productDAO.getProductsStatus(0);
 		request.setAttribute("products", results);
 		
-		System.out.println("Operacion realizada");
-		
-		//response.sendRedirect("/online_shop/dashboard.jsp");
-		
 		RequestDispatcher rd = request.getRequestDispatcher("/dashboard.jsp");
 		rd.forward(request, response);
 	}

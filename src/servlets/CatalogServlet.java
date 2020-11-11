@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import entities.ProductBean;
 import entities.ProductDAOImpl;
@@ -48,11 +49,14 @@ public class CatalogServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List results;
 		
+		HttpSession session = request.getSession(true);
+        int seller = (int) session.getAttribute("user_id");
+        
 		if(request.getParameter("sold") == null || request.getParameter("sold").equals("false")){
-			results = productDAO.getProductsStatusBySeller(1, 0);
+			results = productDAO.getProductsStatusBySeller(seller, 0);
 			request.setAttribute("sold", "false");
 		} else {
-			results = productDAO.getProductsStatusBySeller(1, 1);
+			results = productDAO.getProductsStatusBySeller(seller, 1);
 			request.setAttribute("sold", "true");
 		}
 		request.setAttribute("products", results);

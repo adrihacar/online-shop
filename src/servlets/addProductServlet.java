@@ -75,14 +75,9 @@ public class addProductServlet extends HttpServlet {
 		ProductBean product = new ProductBean();
 		
 		HttpSession session = request.getSession(true);
-		Object objectUser = session.getAttribute("user");
-		if(objectUser == null) {
-			//ERROR
-		}
-		else {
-			//product.setSeller(((Integer) objectUser).intValue());
-		}
-		product.setSeller(1);
+        int seller = (int) session.getAttribute("user_id");
+        
+		product.setSeller(seller);
 		product.setName(productName);
 		product.setPrice(Double.parseDouble(price));
 		product.setCategory(Integer.parseInt(cattegoryProduct));
