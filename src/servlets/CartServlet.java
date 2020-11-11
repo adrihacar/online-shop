@@ -26,12 +26,10 @@ import entities.ProductDAOImpl;
 /**
  * Servlet implementation class CartServlet
  */
-@WebServlet("/Cart")
+@WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-	@PersistenceContext(unitName="online_shop")
-	private EntityManager entityManager;
+  
     /**
      * @see HttpServlet#HttpServlet()
      */
