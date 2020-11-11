@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    import = "entities.ProductBean"
+    import = "entities.CartProductBean"
+    import = "java.util.List"
+    import = "java.util.ArrayList"
+    import = "org.apache.commons.codec.binary.StringUtils" 
+    import = "org.apache.commons.codec.binary.Base64"
+    %>
 <!doctype html>
 <html lang="en">
   <head>
@@ -71,36 +78,47 @@
                     <div class="cart_title" style="color:white">Shopping Cart</div>
                     <div class="cart_items">
                         <ul class="cart_list">
+                            <% Object productsObject = request.getAttribute("products");
+    	 					List<ProductBean> products = (List<ProductBean>)productsObject;
+    	 					Object cartProductsObject = request.getAttribute("cartproducts");
+   	 					    List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
+   	 					    double totalPrice = 0;
+         					for(int i = 0; i < products.size(); i++){ %>
                             <li class="cart_item clearfix">
-                                <div class="cart_item_image"><img src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1560924153/alcatel-smartphones-einsteiger-mittelklasse-neu-3m.jpg" alt=""></div>
+                                <div class="cart_item_image"><img class="bd-placeholder-img card-img-top" src="<% StringBuilder sb = new StringBuilder();
+						sb.append("data:image/png;base64,");
+						sb.append(StringUtils.newStringUtf8(Base64.encodeBase64(products.get(i).getImage(), false)));
+						out.print(sb.toString()); %>"></div>
                                 <div class="cart_item_info d-flex flex-md-row flex-column justify-content-between">
                                     <div class="cart_item_name cart_info_col">
                                         <div class="cart_item_title">Name</div>
-                                        <div class="cart_item_text">PRODUCT NAME</div>
+                                        <div class="cart_item_text"><%= products.get(i).getName()%></div>
                                     </div>
                                     <div class="cart_item_quantity cart_info_col">
                                         <div class="cart_item_title">Quantity</div>
-                                        <div class="cart_item_text">3</div>
+                                        <div class="cart_item_text"><%= cartProducts.get(i).getQuantity()%></div>
                                     </div>
                                     <div class="cart_item_price cart_info_col">
                                         <div class="cart_item_title">Price</div>
-                                        <div class="cart_item_text">500€</div>
+                                        <div class="cart_item_text"><%= products.get(i).getPrice()%>€</div>
                                     </div>
                                     <div class="cart_item_total cart_info_col">
                                         <div class="cart_item_title">Total</div>
-                                        <div class="cart_item_text">1500€</div>
+                                        <div class="cart_item_text"><%= cartProducts.get(i).getQuantity() * products.get(i).getPrice()%>€</div>
+                                        <% totalPrice = totalPrice + cartProducts.get(i).getQuantity() * products.get(i).getPrice(); %>
                                     </div>
                                 </div>
                             </li>
+                            <%} %>
                         </ul>
                     </div>
                     <div class="order_total">
                         <div class="order_total_content text-md-right">
                             <div class="order_total_title">Order Total:</div>
-                            <div class="order_total_amount">1500€</div>
+                            <div class="order_total_amount"><%= totalPrice %>€</div>
                         </div>
                     </div>
-                    <div class="cart_buttons"> <a href="./dashboard.jsp" class="btn btn-light">Continue Shopping</a> <a href="./checkout.html" class="btn btn-warning">Checkout</a> </div>
+                    <div class="cart_buttons"> <a href="./dashboard" class="btn btn-light">Continue Shopping</a> <a href="./checkout.html" class="btn btn-warning">Checkout</a> </div>
                 </div>
             </div>
         </div>
