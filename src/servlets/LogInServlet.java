@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import entities.UserBean;
 import jdbc.UserDAOImp;
+import utils.CreateCart;
 
 /**
  * Servlet implementation class LogInServlet
@@ -56,6 +57,10 @@ public class LogInServlet extends HttpServlet {
 				//user created correctly, put in session
 				HttpSession session = request.getSession(true);
 		        session.setAttribute("user_id",id);
+		        
+		        //create empty cart
+		        CreateCart createCart = new CreateCart();
+		        createCart.createCart(id);
 		        
 		        response.sendRedirect("/online_shop/dashboard");
 				
