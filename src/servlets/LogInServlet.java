@@ -58,10 +58,6 @@ public class LogInServlet extends HttpServlet {
 				HttpSession session = request.getSession(true);
 		        session.setAttribute("user_id",id);
 		        
-		        //create empty cart
-		        CreateCart createCart = new CreateCart();
-		        createCart.createCart(id);
-		        
 		        response.sendRedirect("/online_shop/dashboard");
 				
 			}else {

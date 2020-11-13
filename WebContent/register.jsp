@@ -19,7 +19,13 @@
 	<form action='/online_shop/register' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 100px;'>
 	
 	    <p class='h4 mb-4'>Sign up</p>
+		<%
+		String status = request.getParameter("status");
 	
+	    if(status!=null && status.equalsIgnoreCase("email_exist")){%>
+	  	 <div class="alert alert-danger" role="alert">User already registered</div>
+		<!-- <h3 style='color:red;margin:auto;'>Email or password incorrect</h3> -->
+		 <%} %> 	
 	    <div class='form-row mb-4'>
 	        <div class='col'>
 	            <!-- First name -->

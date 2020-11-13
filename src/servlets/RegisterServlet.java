@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import entities.UserBean;
 import jdbc.UserDAOImp;
+import utils.CreateCart;
 
 /**
  * Servlet implementation class LogInServlet
@@ -48,18 +49,22 @@ public class RegisterServlet extends HttpServlet {
 		
 		//check if the client exists, checking email
 		if(userDAOImp.existClient(email)) {
+			response.sendRedirect("/online_shop/register.jsp?status=email_exist");
 			response.getWriter().append("Error: User exists").append(request.getContextPath());
 			
 		}else {
 			//success 
 			UserBean user= new UserBean(name, surname, email, location, password);
 			userDAOImp.insertUser(user);
-			response.getWriter().append("Success: user created").append(request.getContextPath());
+			
+			int id = userDAOImp.getIdFromEmail(email);
+			//create empty cart
+	        CreateCart createCart = new CreateCart();
+	        createCart.createCart(id);
+	        
+	        response.sendRedirect("/online_shop/login.jsp");
 		}
 
-		
-		
-		
 	}
 
 }
