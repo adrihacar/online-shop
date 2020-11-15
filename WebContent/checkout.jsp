@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    
+    import = "entities.ProductBean"
+    import = "entities.CartProductBean"
+    import = "java.util.List"
+    import = "java.util.ArrayList"
+    import = "org.apache.commons.codec.binary.StringUtils" 
+    import = "org.apache.commons.codec.binary.Base64"%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -94,31 +101,24 @@
         <span style="color: yellow;">Your cart</span>
       </h4>
       <ul class="list-group mb-3">
+        <% Object productsObject = request.getAttribute("products");
+    	List<ProductBean> products = (List<ProductBean>)productsObject;
+    	Object cartProductsObject = request.getAttribute("cartproducts");
+   	 	List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
+   	 	double totalPrice = 0;
+        for(int i = 0; i < products.size(); i++){ %>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0">Product name</h6>
-            <small class="text-muted">Brief description</small>
+            <h6 class="my-0"><%= products.get(i).getName() %></h6>
+            <small class="text-muted">x<%= cartProducts.get(i).getQuantity() %></small>
           </div>
-          <span class="text-muted">$12</span>
+          <span class="text-muted"><%= cartProducts.get(i).getQuantity() * products.get(i).getPrice()%>€</span>
+          <% totalPrice = totalPrice + cartProducts.get(i).getQuantity() * products.get(i).getPrice(); %>
         </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">Second product</h6>
-            <small class="text-muted">Brief description</small>
-          </div>
-          <span class="text-muted">$8</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">Third item</h6>
-            <small class="text-muted">Brief description</small>
-          </div>
-          <span class="text-muted">$5</span>
-        </li>
-        
+        <%} %>      
         <li class="list-group-item d-flex justify-content-between">
-          <span>Total (USD)</span>
-          <strong>$20</strong>
+          <span>Total (€)</span>
+          <strong><%= totalPrice %>€</strong>
         </li>
       </ul>
 
