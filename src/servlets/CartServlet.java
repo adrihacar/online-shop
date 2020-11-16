@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import entities.CartBean;
 import entities.CartDAOImpl;
@@ -51,9 +52,11 @@ public class CartServlet extends HttpServlet {
 		ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
 		
 		// TODO get user id
+		HttpSession session = request.getSession(true);
+        int user = (int) session.getAttribute("user_id");
 		
 		// get cart of user
-		CartBean cart = cartDAO.findCartByUser(2);
+		CartBean cart = cartDAO.findCartByUser(user);
 		
 		// get id of the products in the cart
 		List<CartProductBean> cartproducts = cartProductDAO.findProductsInCart(cart.getId()); //this can be sent to the jsp

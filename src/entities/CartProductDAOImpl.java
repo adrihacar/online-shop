@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.ServletContextEvent;
 import javax.transaction.UserTransaction;
 
 public class CartProductDAOImpl implements CartProductDAO{
@@ -16,6 +17,12 @@ public class CartProductDAOImpl implements CartProductDAO{
 	public CartProductDAOImpl(String unidadDePersistencia)
 	{
 		this.emf = Persistence.createEntityManagerFactory(unidadDePersistencia);
+	}
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+	  EntityManagerFactory emf = this.emf;
+	  emf.close();
 	}
 	
 	@Override

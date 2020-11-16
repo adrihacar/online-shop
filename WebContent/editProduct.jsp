@@ -44,7 +44,7 @@
               </ul>
               <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
+                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
               </div>
 			</form>
 			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
