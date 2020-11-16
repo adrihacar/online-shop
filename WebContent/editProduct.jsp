@@ -74,7 +74,7 @@
 		<!-- Default form register -->
 	<form action='/online_shop/editProduct' enctype="multipart/form-data" method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
-	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
+	    <p class='h4 mb-4' style="color: white;">Edit your Product</p>
 	
 	    <div class='form-row mb-4'>
 	        <div class='col'>
@@ -85,10 +85,10 @@
             <!-- Cattegory -->
                 <label style="color: white;" for="cattegory">Cattegory:</label>
                 <select id="cattegory" name="cattegoryProduct">
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
+                  <option <% if(product.getCategory()==0){%>selected="selected"<%}%>value="0">Home</option>
+                  <option <% if(product.getCategory()==1){%>selected="selected"<%}%>value="1">Toys</option>
+                  <option <% if(product.getCategory()==2){%>selected="selected"<%}%>value="2">Games</option>
+                  <option <% if(product.getCategory()==3){%>selected="selected"<%}%>value="3">Clothes</option>
                 </select>
             </div>
 	    </div>
