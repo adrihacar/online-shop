@@ -1,5 +1,7 @@
 package jdbc;
 
+import java.util.List;
+
 import entities.UserBean;
 
 interface UserDAO {
@@ -10,4 +12,5 @@ interface UserDAO {
 	public UserBean getUserdata(String id);
 	public String getSaltFromDatabase(String email);
 	int getIdFromEmail(String email);
+	public List<UserBean> getAllUsers();
 }

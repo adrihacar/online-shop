@@ -48,64 +48,29 @@
             <div class="collapse navbar-collapse" id="navbarsExample09">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
-                <form action='/online_shop/dashboard' method='get'>
-                  <button class="nav-link" type='submit'>Home </button>
-                </form>
-                </li>
+	                <form action='/online_shop/AdminProductsServlet' method='get'>
+	                  <button class="nav-link" type='submit'>Home </button>
+	                </form>
                 <li class="nav-item">
-                  <a class="nav-link" href="./addProduct.jsp">Add product</a>
+                    <form action='/online_shop/AdminUsersServlet' method='get'>
+                  	  <button class="nav-link" type='submit'>Users</button>
+                    </form>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
-                </li>
-                <li class="nav-item active">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
-            </li>
-              </ul>
-              <form class="form-inline my-2 my-md-0">
-              <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
-              </div>
-			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
-                <div>
-                <label style="color: white" for="category"></label>
-                <select id="category" name="cattegoryProductSearch">
-                  <option value="-1">Any</option>
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
-                </select>
-            </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary nav-item">Search</button>
-              </form>
-              
+              </ul>             
             </div>
           </nav>
+        </div>
     </header>
 <main role="main" class="back-box">
 
   <section class="jumbotron text-center back-box" style="color: white;">
     <div class="container">
-      <h1>Your Products</h1> 
+      <h1>All the Products</h1> 
     </div>
   </section>
 
   <div class="album py-5 bg-light back-box">
     <div class="container back-box">
-     <% if(request.getAttribute("sold").equals("false")){ %>
-        <form action='/online_shop/Catalog' method='get'>
-           <button type='submit' name="sold" value="true" class="btn btn-dark">Show sold</button>
-        </form>
-     <% } else { %>
-     	<form action='/online_shop/Catalog' method='get'>
-           <button type='submit' name="sold" value="false" class="btn btn-dark">Show on sale</button>
-        </form>
-     <% } %>
      
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
@@ -118,7 +83,7 @@
 						sb.append(StringUtils.newStringUtf8(Base64.encodeBase64(products.get(i).getImage(), false)));
 						out.print(sb.toString()); %>">
 						 <div class="card-body">
-            <% if(request.getAttribute("sold") != null && request.getAttribute("sold").equals("true")){ %>
+            <% if(products.get(i).getStatus()==1){ %>
             	<h4 style="color: red; text-align: end;">SOLD</h4>
             <% } %>
               <h4><%= products.get(i).getName() %></h4>
