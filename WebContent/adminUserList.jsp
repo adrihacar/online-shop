@@ -6,14 +6,14 @@
     import = "java.util.ArrayList"
     import = "org.apache.commons.codec.binary.StringUtils" 
     import = "org.apache.commons.codec.binary.Base64"
-    
+    import = "jdbc.UserDAOImp"
     %>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your Catalog - Online shop</title>
+    <title> Online Shop | Admin User List</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/cover/">
     <!-- Custom styles for this template -->
@@ -49,7 +49,7 @@
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
 	                <form action='/online_shop/AdminProductsServlet' method='get'>
-	                  <button class="nav-link" type='submit'>Home </button>
+	                  <button class="nav-link" type='submit'>Products</button>
 	                </form>
                 <li class="nav-item">
                     <form action='/online_shop/AdminUsersServlet' method='get'>
@@ -65,7 +65,7 @@
 
   <section class="jumbotron text-center back-box" style="color: white;">
     <div class="container">
-      <h1>All the Products</h1> 
+      <h1>All the Users</h1> 
     </div>
   </section>
 
@@ -75,8 +75,11 @@
       <div class="row">
       <% Object UsersObject = request.getAttribute("users");
     	 List<UserBean> users = (List<UserBean>)UsersObject;
-         for(int i = 0; i < users.size(); i++){ %>
+    	 UserDAOImp userDAO = new UserDAOImp();
+         for(int i = 0; i < users.size(); i++){ 
+        	  if(!userDAO.isAdmin(users.get(i).getId())) {    %>
         <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
               <h4><%= users.get(i).getEmail() %></h4>
               <p class="card-text"><%= users.get(i).getName()%>&nbsp;<%= users.get(i).getSurname() %></p>
               <div class="d-flex justify-content-between align-items-center">
@@ -91,8 +94,10 @@
                 </div>
               </div>
             </div>
+            <% } %>
+            <% } %>
           </div>
-          <% } %>
+        </div>
         </div>
 
 </main>

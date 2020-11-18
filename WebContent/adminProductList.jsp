@@ -49,7 +49,7 @@
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
 	                <form action='/online_shop/AdminProductsServlet' method='get'>
-	                  <button class="nav-link" type='submit'>Home </button>
+	                  <button class="nav-link" type='submit'>Products</button>
 	                </form>
                 <li class="nav-item">
                     <form action='/online_shop/AdminUsersServlet' method='get'>
