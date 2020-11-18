@@ -27,7 +27,7 @@ import entities.ProductDAOImpl;
  */
 @WebServlet("/addProduct")
 @MultipartConfig
-public class addProductServlet extends HttpServlet {
+public class AddProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
@@ -44,7 +44,7 @@ public class addProductServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public addProductServlet() {
+    public AddProductServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

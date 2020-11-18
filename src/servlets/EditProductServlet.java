@@ -19,22 +19,25 @@ import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
 import entities.ProductDAOImpl;
+import jdbc.UserDAOImp;
 
 /**
  * Servlet implementation class editProductServlet
  */
 @WebServlet("/editProduct")
 @MultipartConfig
-public class editProductServlet extends HttpServlet {
+public class EditProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
 	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
+	
+	UserDAOImp userDAO = new UserDAOImp();
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public editProductServlet() {
+    public EditProductServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -74,7 +77,11 @@ public class editProductServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		int seller = (int) session.getAttribute("user_id");
 		
-		product.setSeller(seller);
+		if(userDAO.isAdmin(seller)) {
+			product.setSeller(seller);
+		} else {
+			product.setSeller(product.getSeller());
+		}
 		product.setId(Integer.parseInt(request.getParameter("idProduct")));
 		product.setName(productName);
 		product.setPrice(price);
@@ -91,8 +98,11 @@ public class editProductServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		response.sendRedirect("/online_shop/dashboard");
-		
+		if(userDAO.isAdmin(seller)) {
+			response.sendRedirect("/online_shop/AdminProductsServlet");
+		} else {
+			response.sendRedirect("/online_shop/dashboard");
+		}
 		//RequestDispatcher rd = request.getRequestDispatcher("/dashboard");
 		//rd.forward(request, response);
 		

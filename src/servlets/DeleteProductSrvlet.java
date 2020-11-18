@@ -11,10 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
 import entities.ProductDAOImpl;
+import jdbc.UserDAOImp;
 
 /**
  * Servlet implementation class DeleteProductSrvlet
@@ -25,6 +27,9 @@ public class DeleteProductSrvlet extends HttpServlet {
 	private ServletConfig config;
 	
 	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
+	
+	UserDAOImp userDAO = new UserDAOImp();
+
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -61,7 +66,14 @@ public class DeleteProductSrvlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		response.sendRedirect("/online_shop/Catalog");
+		HttpSession session = request.getSession(true);
+		int seller = (int) session.getAttribute("user_id");
+
+		if(userDAO.isAdmin(seller)) {
+			response.sendRedirect("/online_shop/AdminProductsServlet");
+		} else {
+			response.sendRedirect("/online_shop/Catalog");
+		}
 		
 	}
 

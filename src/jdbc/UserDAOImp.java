@@ -267,11 +267,10 @@ public class UserDAOImp implements UserDAO{
 			if(con == null) {
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
-				//check if there is a row with that value in the database
 				st = con.createStatement();
 				rs =st.executeQuery("SELECT * FROM users");
 				
-				if(rs.next()) {
+				while(rs.next()) {
 					UserBean userAux = new UserBean();
 					userAux.setId(rs.getInt("id"));	
 					userAux.setName(rs.getString("name"));
@@ -292,4 +291,29 @@ public class UserDAOImp implements UserDAO{
 		
 		return users;
 		}
+	
+	@Override
+	public boolean isAdmin(int id) {
+		Connection con;
+		Statement st;
+		ResultSet rs;
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			} else {
+				st = con.createStatement();
+				rs =st.executeQuery("SELECT id FROM users WHERE admin = 1");
+				while(rs.next()) {
+					if(id == rs.getInt("id")) {
+						return true;
+					}
+				}
+			}
+		} catch(Exception e) {
+			
+		}
+		return false;
+	}
 }

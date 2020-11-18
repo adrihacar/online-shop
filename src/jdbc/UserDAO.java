@@ -13,4 +13,5 @@ interface UserDAO {
 	public String getSaltFromDatabase(String email);
 	int getIdFromEmail(String email);
 	public List<UserBean> getAllUsers();
+	public boolean isAdmin(int id); 
 }
