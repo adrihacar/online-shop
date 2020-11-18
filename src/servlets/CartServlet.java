@@ -30,7 +30,12 @@ import entities.ProductDAOImpl;
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-  
+	
+	// DAOs
+	CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
+	CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
+	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -46,10 +51,6 @@ public class CartServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
-		CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
-		ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
 		
 		// TODO get user id
 		HttpSession session = request.getSession(true);
@@ -84,8 +85,38 @@ public class CartServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		String action = request.getParameter("action");
+		if (action.equals("addToCart")) {
+			// get user id
+			HttpSession session = request.getSession(true);
+	        int user = (int) session.getAttribute("user_id");
+			
+			// get cart of user
+			CartBean cart = cartDAO.findCartByUser(user);
+			doGet(request, response);
+			System.out.println(cart.getId());
+			// Receive product and quantity through parameters
+			int productId = Integer.parseInt(request.getParameter("product"));
+			int quantityId = Integer.parseInt(request.getParameter("quantity"));
+			
+			// Create object
+			CartProductBean cartproduct = new CartProductBean();
+			cartproduct.setCart(cart.getId());
+			cartproduct.setProduct(productId);
+			cartproduct.setQuantity(quantityId);
+			
+			// Insert the object in the database
+			try {
+				cartProductDAO.insert(cartproduct);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			response.sendRedirect("/online_shop/dashboard");
+		}
+		return;
+
 	}
 
 }

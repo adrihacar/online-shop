@@ -65,7 +65,7 @@ public class CartBean {
 	
 	//Getters and setters
 	public int getId() {
-		return user;
+		return id;
 	}
 	
 	public int getUser() {

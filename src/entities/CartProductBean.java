@@ -1,6 +1,6 @@
 package entities;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +22,7 @@ public class CartProductBean {
 	
 	// Attributes
 	@Id
-	@GeneratedValue (strategy = AUTO)
+	@GeneratedValue (strategy = IDENTITY)
 	private int id;
 	
 	@Column(name="cart")
@@ -78,11 +78,5 @@ public class CartProductBean {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
-	
-
-
-	
-	
 
 }

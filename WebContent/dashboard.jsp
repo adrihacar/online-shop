@@ -117,10 +117,15 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
-                    </div>
-                    <input type="number" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+                    <form action='/online_shop/cart' method='post' id="form<%=products.get(i).getId()%>">
+                      <input type="hidden" id="action" name="action" value="addToCart">
+                      <input type="hidden" id="product" name="product" value="<%=products.get(i).getId()%>">
+                      <input type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                      <div class="input-group-prepend">
+                        <button type="submit" form="form<%=products.get(i).getId()%>" value="Submit" name="idProduct" class="btn btn-outline-secondary" type="button" id="button-addon1">Add to cart</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

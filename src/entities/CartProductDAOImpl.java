@@ -60,6 +60,7 @@ public class CartProductDAOImpl implements CartProductDAO{
 		EntityManager entityManager = emf.createEntityManager();
 		Query cartproductsquery = entityManager.createNamedQuery("findProductsInCart").setParameter("cart",cart);
 		List<CartProductBean> results = cartproductsquery.getResultList();
+		entityManager.close();
 		return results;
 	}
 
@@ -67,6 +68,7 @@ public class CartProductDAOImpl implements CartProductDAO{
 	public CartProductBean findByID(int id) {
 		EntityManager entityManager = emf.createEntityManager();
 		CartProductBean cartproduct = entityManager.find(CartProductBean.class, id);
+		entityManager.close();
 		return cartproduct;
 	}
 

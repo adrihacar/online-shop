@@ -27,7 +27,7 @@ import entities.ProductDAOImpl;
  * Servlet implementation class CheckoutServlet
  */
 
-@WebServlet("/Checkout")
+@WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -61,7 +61,7 @@ public class CheckoutServlet extends HttpServlet {
         int user = (int) session.getAttribute("user_id");
 		
 		// get cart of user
-		CartBean cart = cartDAO.findCartByUser(2); // TODO change this to the real user id
+		CartBean cart = cartDAO.findCartByUser(user); // TODO change this to the real user id
 		
 		// get id of the products in the cart
 		List<CartProductBean> cartproducts = cartProductDAO.findProductsInCart(cart.getId()); //this can be sent to the jsp
