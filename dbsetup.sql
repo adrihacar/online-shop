@@ -10,7 +10,8 @@ CREATE TABLE users (
     email VARCHAR(256) UNIQUE NOT NULL,
     location VARCHAR(256) NOT NULL,
     password VARCHAR(256) NOT NULL,
-    salt TEXT NOT NULL
+    salt TEXT NOT NULL,
+    admin INTEGER
 );
 
 CREATE TABLE products (
@@ -23,18 +24,18 @@ CREATE TABLE products (
     image LONGBLOB,
     price DOUBLE NOT NULL,
     
-    FOREIGN KEY(seller) REFERENCES users(id)
+    FOREIGN KEY(seller) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE carts (
     id SERIAL PRIMARY KEY,
     user BIGINT UNSIGNED NOT NULL,
     address VARCHAR(256) NOT NULL,
-    paymethod INTEGER NOT NULL,
+    paymethod BIGINT NOT NULL,
     bought BOOLEAN NOT NULL,
     date BIGINT NOT NULL,
 
-    FOREIGN KEY(user) REFERENCES users(id)
+    FOREIGN KEY(user) REFERENCES users(id)ON DELETE CASCADE
 );
 
 CREATE TABLE cartproducts (
@@ -43,8 +44,8 @@ CREATE TABLE cartproducts (
     product BIGINT UNSIGNED NOT NULL,
     quantity INTEGER NOT NULL,
 
-    FOREIGN KEY(cart) REFERENCES carts(id),
-    FOREIGN KEY(product) REFERENCES products(id)
+    FOREIGN KEY(cart) REFERENCES carts(id) ON DELETE CASCADE,
+    FOREIGN KEY(product) REFERENCES products(id) ON DELETE CASCADE
 );
 
 INSERT INTO users (name, surname, email, location, password, salt) VALUES

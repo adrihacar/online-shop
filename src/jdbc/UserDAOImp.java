@@ -316,4 +316,27 @@ public class UserDAOImp implements UserDAO{
 		}
 		return false;
 	}
+
+	@Override
+	public void deleteUser(int id) {
+		Connection con;
+		Statement st;
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			}else {
+				st = con.createStatement();
+				st.executeUpdate("DELETE FROM users WHERE id = "+id);
+				
+				st.close();
+				con.close();
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

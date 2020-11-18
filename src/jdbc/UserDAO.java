@@ -14,4 +14,5 @@ interface UserDAO {
 	int getIdFromEmail(String email);
 	public List<UserBean> getAllUsers();
 	public boolean isAdmin(int id); 
+	public void deleteUser(int id);
 }
