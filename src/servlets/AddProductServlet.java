@@ -78,8 +78,10 @@ public class AddProductServlet extends HttpServlet {
 		Object sellerObject = session.getAttribute("user_id");
 		if(sellerObject == null) {
 			request.setAttribute("errorMsg", "There is no user in the session!!");			
-			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
 		}
+		
 		int seller = (int) sellerObject;
 		product.setSeller(seller);
 		product.setName(productName);

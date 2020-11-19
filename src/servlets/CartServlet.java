@@ -46,7 +46,7 @@ public class CartServlet extends HttpServlet {
     }
     
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		this.config = config;
 	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -57,8 +57,9 @@ public class CartServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		Object userObject = session.getAttribute("user_id");
 		if(userObject == null) {
-			request.setAttribute("errorMsg", "There is no user in the session!!");			
-			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+			request.setAttribute("errorMsg", "There is no user in the session!!");	
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
 		}
 		int user = (int) userObject;
 		

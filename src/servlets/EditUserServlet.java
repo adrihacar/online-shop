@@ -42,7 +42,8 @@ public class EditUserServlet extends HttpServlet {
 			Object idObject = session.getAttribute("user_id");
 			if(idObject == null) {
 				request.setAttribute("errorMsg", "There is no user in the session!!");			
-				config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+				RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+				rd.forward(request, response);
 			}
 			idUser = (int) idObject;
 		}
@@ -78,7 +79,8 @@ public class EditUserServlet extends HttpServlet {
 		Object idObject = session.getAttribute("user_id");
 		if(idObject == null) {
 			request.setAttribute("errorMsg", "There is no user in the session!!");			
-			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
 		}
 		int id = (int) idObject;
 

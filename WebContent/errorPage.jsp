@@ -26,9 +26,7 @@ out.println(htmlErrorElem);
     <pasta></pasta>
     <plate></plate>
   </spaguetti>
-</div>
-<form action='/online_shop/dashboard' method='get'>
-	<button class="home-button" type='submit'>Go Back Home </button>
-</form>
+
+	<a class="home-button" href="./home.jsp" >Go Back Home </a>
 </body>
 </html>
