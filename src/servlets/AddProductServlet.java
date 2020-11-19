@@ -75,8 +75,12 @@ public class AddProductServlet extends HttpServlet {
 		ProductBean product = new ProductBean();
 		
 		HttpSession session = request.getSession(true);
-        int seller = (int) session.getAttribute("user_id");
-        
+		Object sellerObject = session.getAttribute("user_id");
+		if(sellerObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+		}
+		int seller = (int) sellerObject;
 		product.setSeller(seller);
 		product.setName(productName);
 		product.setPrice(Double.parseDouble(price));

@@ -126,10 +126,12 @@
               <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
               <div class="d-flex justify-content-between align-items-center">
 			  <form action='/online_shop/editProduct' method='get'>
-                	<button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
+			  		<input type="hidden" id="idProduct" name="idProduct" value="<%=products.get(i).getId()%>">
+                	<button class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
 		      </form>
                 <form action='/online_shop/deleteProduct' method='post'>
-                    <button type='submit' name="idProduct" value="<%= products.get(i).getId() %>" type="button" class="close" aria-label="Close">
+                	<input type="hidden" id="idProduct" name="idProduct" value="<%=products.get(i).getId()%>">
+                    <button type='submit' type="button" class="close" aria-label="Close">
  			<span aria-hidden="true" style="color=red">Delete ×</span>
 	            </button>
 		    </form>

@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import utils.CreateCart;
 @WebServlet("/editUser")
 public class EditUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private ServletConfig config;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -38,7 +39,12 @@ public class EditUserServlet extends HttpServlet {
 			idUser = Integer.parseInt(request.getParameter("idUser"));
 		}else {
 			HttpSession session = request.getSession();
-			idUser = (int) session.getAttribute("user_id");
+			Object idObject = session.getAttribute("user_id");
+			if(idObject == null) {
+				request.setAttribute("errorMsg", "There is no user in the session!!");			
+				config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+			}
+			idUser = (int) idObject;
 		}
 		
 		//TODO check if this user id  is the same as the id that the user is looged
@@ -69,7 +75,12 @@ public class EditUserServlet extends HttpServlet {
 
 		//success 
 		UserBean user= new UserBean(name, surname, email, location, newPassword);
-		int id = (int) session.getAttribute("user_id");
+		Object idObject = session.getAttribute("user_id");
+		if(idObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+		}
+		int id = (int) idObject;
 
 		userDAOImp.updateUser(user, id);
 

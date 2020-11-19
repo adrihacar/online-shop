@@ -24,6 +24,8 @@ import entities.ProductDAOImpl;
 @WebServlet("/Catalog")
 public class CatalogServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private ServletConfig config;
+
 	ProductBean productBean = new ProductBean();
 	
 	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
@@ -50,7 +52,12 @@ public class CatalogServlet extends HttpServlet {
 		List results;
 		
 		HttpSession session = request.getSession(true);
-        int seller = (int) session.getAttribute("user_id");
+		Object sellerObject = session.getAttribute("user_id");
+		if(sellerObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+		}
+		int seller = (int) sellerObject;
         
 		if(request.getParameter("sold") == null || request.getParameter("sold").equals("false")){
 			results = productDAO.getProductsStatusBySeller(seller, 0);
