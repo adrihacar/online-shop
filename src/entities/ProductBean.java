@@ -13,10 +13,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Query;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.jboss.logging.Param;
 
-import com.sun.istack.NotNull;
+
 
 @Entity
 @NamedQueries({
