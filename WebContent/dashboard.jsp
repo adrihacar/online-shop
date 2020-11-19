@@ -56,7 +56,7 @@
                   <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
+                  <a class="nav-link" href="./editUser">My user</a>
                 </li>
                 <li class="nav-item">
 			<form action='/online_shop/Catalog' method='get'>

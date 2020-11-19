@@ -129,7 +129,7 @@ public class UserDAOImp implements UserDAO{
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
 				st = con.createStatement();
-				String query = "UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',password = '"+user.getPassword() + "', location ='"+user.getLocation()+ "' WHERE id="+id;
+				String query = "UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',salt = '"+user.getSalt() +"',password = '"+user.getPassword() + "', location ='"+user.getLocation()+ "' WHERE id="+id;
 				System.out.println(query);
 				st.executeUpdate(query);
 				

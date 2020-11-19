@@ -58,20 +58,28 @@ public class EditUserServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String name = request.getParameter("Name");
 		String surname = request.getParameter("Surname");
-		String email = request.getParameter("Email");
 		String password = request.getParameter("Password");
-		String newPassword = request.getParameter("newPassword");
 		String location = request.getParameter("Location");
+		int id = Integer.parseInt(request.getParameter("Id"));
 
 		HttpSession session = request.getSession(true);
+		int session_id = (int) session.getAttribute("user_id");
 		
 		UserDAOImp userDAOImp = new UserDAOImp();
-
-		//success 
-		UserBean user= new UserBean(name, surname, email, location, newPassword);
-		int id = (int) session.getAttribute("user_id");
-
-		userDAOImp.updateUser(user, id);
+		
+		if(id == session_id || userDAOImp.isAdmin(session_id)) {
+			UserBean user = userDAOImp.getUserdata(id);
+			
+			if(password != null && !password.equalsIgnoreCase("")) {
+				user = new UserBean(name,surname,user.getEmail(), location, password);
+			}else {
+				user.setName(name);
+				user.setSurname(surname);
+				user.setLocation(location);
+			}
+			
+			userDAOImp.updateUser(user, id);
+		}
 
 		response.sendRedirect("/online_shop/dashboard");
 

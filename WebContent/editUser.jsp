@@ -29,7 +29,7 @@
 		
 		
 	    <!-- E-mail -->
-	    <input name='Email' value="<%=user.getEmail()%>" type='hidden' id='defaultRegisterFormEmail' class='form-control mb-4' placeholder='E-mail'>
+	    <input name='Id' value="<%=user.getId()%>" type='hidden' id='defaultRegisterFormId' class='form-control mb-4' placeholder='Id'>
 		
 		<%=user.getEmail()%>"
 		
@@ -45,13 +45,11 @@
 	    </div>
 	
 	    <!-- Password -->
+	    Leave it blank if you don't want to change the password
 	    <input name='Password' type='password' id='defaultRegisterFormPassword' class='form-control' placeholder='Password' aria-describedby='defaultRegisterFormPasswordHelpBlock'>
 	    <small iultRegisterFormPaEmaillpBlock'emailss='form-text text-muted mb-4'>
 	        At least 8 characters and 1 digit
 	    </small>
-	    
-	     <!-- New Password -->
-	    <input name='newPassword' type='password' id='defaultRegisterFormNewPassword' class='form-control' placeholder='newPassword' aria-describedby='defaultRegisterFormPasswordHelpBlock'>
 	    
 	     <!-- Location -->
 		<input name='Location' value="<%= user.getLocation()%>" type='text' id='defaultRegisterFormLocation' class='form-control mb-4' placeholder='Location'>
@@ -63,7 +61,7 @@
 	
 	    <!-- Terms of service -->
 	    <p>By clicking
-	        <em>Sign up</em> you agree to our
+	        <em>Save</em> you agree to our
 	        <a href='' target='_blank'>terms of service</a>
 	
 	</form>
