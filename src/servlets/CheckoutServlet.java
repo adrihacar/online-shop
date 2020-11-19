@@ -82,6 +82,7 @@ public class CheckoutServlet extends HttpServlet {
 	    }
 		
 	    //send needed attributes to the cart jsp
+		request.setAttribute("cart", cart.getId());
 		request.setAttribute("products", products); // to get the products in a cart
 		request.setAttribute("cartproducts", cartproducts); // to know
 		RequestDispatcher rd = request.getRequestDispatcher("/checkout.jsp");
