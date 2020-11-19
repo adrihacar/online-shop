@@ -1,18 +1,15 @@
-package jhc.jms;
+package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.annotation.Resource;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import javax.jms.QueueBrowser;
 import javax.jms.Session;
@@ -26,339 +23,366 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sun.research.ws.wadl.Request;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
-
-import beans.ChatBean;
-import beans.ChatMessage;
+import entities.ChatBean;
+import entities.ChatDAOImpl;
+import entities.ChatElement;
+import entities.ChatMessage;
+import entities.UserBean;
+import jdbc.UserDAOImp;
 
 /**
  * Servlet implementation class ReadMessageQueueBrowserServlet
  */
 @WebServlet(
-		urlPatterns="/ReadMessageQueueBrowser.html",
+		urlPatterns= {"/chatroom", "/swapchat"},
 		loadOnStartup=1,
 		initParams={@WebInitParam(name="configuracion", value="tiw.p1.onlineShop")}
 		)
 public class ReadMessageQueueBrowserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CHATROOM_JSP = "/chatRoom.jsp";
-	private static final String ERROR_JSP = "/ErrorPage.jsp";
+	private static final String ERROR_JSP = "/errorPage.jsp";
+	private static final String PERSISTENCE_UNIT = "online_shop";
+	private static final String SWAP_CHAT = "/swapchat";
+	private static final String LOAD_ALL_CHATS = "/chatroom";
 	private ServletConfig config;
-	private long activeChatID;
-	//private List<ChatMessageBean> activeChat;
-	//private List<ChatBean> chatList;
-    
-	 // Inject the connectionFactory using annotations
-	 //.. . .
-	@Resource(mappedName = "tiwconnectionfactory") //logic name
-	 private ConnectionFactory tiwconnectionfactory;
-	 // Inject the queue using annotations
-	 //. . . 
-	 @Resource(mappedName="tiwqueue") //logic name
-	 private Queue queue;
-	 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ReadMessageQueueBrowserServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-    public void init(ServletConfig config) throws ServletException {
-    	this.config = config;
-    }
-    
+	private long activeChatID = -1;
+	private int loggedUserID;
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Auxiliary variable. Id of the user recipient of the messages.
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	private int recipientUser = -1;
 
-		try {
-			//config.getServletContext().getRequestDispatcher(CHATROOM_JSP).forward(request, response);
-			doPost(request, response);
-		} catch (Exception e) {
-			System.out.println(
-				"JHC ***************************************Error in doGet: "
-					+ e);
-			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);;
-		}		
-		
+	// Inject the Connection Factory
+	@Resource(mappedName = "ChatRoomFactory") //logic name
+	private ConnectionFactory chatRoomFactory;
+
+	// Inject the queue
+	@Resource(mappedName = "ChatRoomQueue")
+	private Queue queue;
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ReadMessageQueueBrowserServlet() {
+		super();        
+	}
+
+	public void init(ServletConfig config) throws ServletException {
+		this.config = config;
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+
+		try {			
+			doPost(request, response);
+		} catch (Exception e) {
+			System.out.println("UNEXPECTED ERROR in doGet: " + e);
+			e.printStackTrace();
+			request.setAttribute("errorMsg", e.getMessage());
+			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);;
+		}		
+
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {				
-		try {
-
-			/*
-			// Create a connection using the connectionFactory
-		      Connection oConn = tiwconnectionfactory.createConnection();
-		      // Next create the session. Indicate that transaction will not be supported
-		      Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		      
-		      //Query the DB to obtain the chatID of the active chat
-		      //SELECT conv.ID FROM chatList WHERE (conv.user==me AND conv.active)
-		      
-		      //Create the message selector
-		      //String selector = chatID; //BigInteger.valueOf(chatID);
-		      
-			// USe the session to create a browser associated to the queue
-		      //QueueBrowser oBrowserConsumer = oSession.createBrowser(queue, selector);
-		      QueueBrowser oBrowserConsumer = oSession.createBrowser(queue);
-			//Start the connection
-		      oConn.start();
-			// User the browser to retrieve a collection (enumeration) of messages
-			java.util.Enumeration enum1 = oBrowserConsumer.getEnumeration();
-			
-			ArrayList<ChatMessageBean> activeChat = new ArrayList<ChatMessageBean>();
-			
-			while (enum1.hasMoreElements()) {
-				// Get a message from the enumeration
-				Object oMessage = enum1.nextElement();
-				
-				ChatMessageBean msg = new ChatMessageBean();
-				
-				// Check if the message is an instance of TextMessage
-				if (oMessage instanceof TextMessage) {
-					
-					//Set the message
-					msg.setMsg(((TextMessage) oMessage).getText());
-					//Set the delivery time
-					msg.setDeliveryTime(((TextMessage) oMessage).getJMSDeliveryTime());
-					//Set the sender
-					msg.setSenderID(((TextMessage) oMessage).getLongProperty("sender"));
-					//out.println("<p>" + message + "</p>");
-					
-					//Add the msg to the list
-					activeChat.add(msg);		
-				}
-				// If it is an instance of TextMessage, cast it and add it to the out
-			}
-			*/
-			//Add the object to the request and send it
-			//request.setAttribute("msgList", activeChat);
-			Boolean createNewChat = false;
-			createNewChat = (Boolean) request.getAttribute("newChat"); 
-			if(createNewChat) {
-				Integer buyer = (Integer) request.getAttribute("buyer");
-				Integer seller = (Integer) request.getAttribute("seller");
-				
-				entityManager.getTransaction().begin();
-				//call JPA to add a new row in the table
-				ChatBean newChat = new ChatBean();
-				newChat.setChatID(chatID);//PK set by JPA
-				newChat.setBuyer(buyer.intValue());
-				newChat.setSeller(seller.intValue());
-				
-				entityManager.persist(newChat);
-				
-				//Set the new chat as the active chat
-				activeChatID = newChat.getChatID();
-				
-				entityManager.getTransaction().commit();
-				
-			}
-			
-			ArrayList<ChatBean> chatList;
-			Object oChatList = getAllChats();
-			
-			if(oChatList != null) {
-				//If the object is not null, then cast it to an ArrayList
-				chatList = (ArrayList<ChatBean>) (oChatList);
-				/*If no new conversation has been created, the active 
-					chat is the most recent one, the first in the list returned by JPA
-				*/
-				if (!createNewChat) {
-					activeChatID = chatList.get(0).getChatID();
-				}
-			}else {
-				chatList = null;
-			}
-			request.setAttribute("chatList", chatList);
+		try {	
+			//Obtain the logged user's id (user_id) from the session
 			HttpSession oHttpSession = request.getSession();
-			oHttpSession.setAttribute("activeChat", activeChatID);
-			
-			
-			ArrayList<ChatMessage> activeChat;
-			Object oChat = getActiveChat();
-			
-			if(oChat != null) {
-				//If the object is not null, then cast it to an ArrayList
-				activeChat = (ArrayList<ChatMessage>) (oChat);
+			loggedUserID = (int) oHttpSession.getAttribute("user_id");
+			String servletPath = request.getServletPath();
+
+			if(servletPath.equals(LOAD_ALL_CHATS)) {
+				//Case: LOAD_ALL_CHATS: Update both the chatList and the activeChat
+
+				/*
+				 * The attribute 'sendTo' is only set when accessing the chat room after clicking 'direct message' button
+				 * Otherwise, the user only enters the chat room without preselecting any recipient user.
+				 * */ 
+				try {
+					recipientUser = (int) request.getAttribute("sendTo");
+				} catch (Exception e) {
+					//The attribute is not defined in this request. Ignore
+					recipientUser = -1;
+				}			
+
+				List<ChatBean> userChats = getUserChats();
+				List<ChatElement> chatList = generateChatList(userChats);
+
+				//Update the attributes from the session
+				oHttpSession.setAttribute("chatList", chatList);
+				oHttpSession.setAttribute("activeChat", activeChatID);
+
+				//Update the messages displayed
+				//List<ChatMessage> activeChatMsgs = getActiveChatMessages();
+				List<String> activeChatHtml = getMsgHistoryHtml(getActiveChatMessages());
+
+				//Set the attributes of the new request					
+				request.setAttribute("msgList", activeChatHtml);
+
+				//response.setIntHeader("Refresh", 1);
+				config.getServletContext().getRequestDispatcher(CHATROOM_JSP).forward(request, response);
+
+			}else if(servletPath.equals(SWAP_CHAT)){ //Case: SWAP_CHAT: update only activeChat
+				/*This URL is only triggered by the AJAX event.
+				 * To simplify the drawing of the page in the JS file,
+				 * the HTML code is sent directly to the page, to replace the previous element
+				 * */
+				activeChatID = (long) request.getAttribute("chatRef");
+
+				//List<ChatMessage> activeChatMsgs = getActiveChatMessages();
+				List<String> activeChatHtml = getMsgHistoryHtml(getActiveChatMessages());
+
+				response.setContentType("text/plain");
+				PrintWriter out = response.getWriter();
+				out.println(activeChatHtml);
+
 			}else {
-				activeChat = null;
+				//Case: no valid servletPath
+				throw new Exception("invalid servletPath");
 			}
-			
-			request.setAttribute("msgList", activeChat);
-			//response.setIntHeader("Refresh", 1);
-			config.getServletContext().getRequestDispatcher(CHATROOM_JSP).forward(request, response);
-			
-			/*This is not longer necessary. See getActiveChat()
-			// Stop connection
-			oConn.stop();
-			// Close browser
-			oBrowserConsumer.close();
-			// Close session
-			oSession.close();
-			// Close connection
-			oConn.close();
-			*/
-			
-		} catch (Exception e) {
-			System.out.println(
-				"JHC *************************************** Error in doPost: "
-					+ e);
+		} catch (Exception e) {			
+			System.out.println("UNEXPECTED ERROR in doPost: ");
+			e.printStackTrace();
+			request.setAttribute("errorMsg", e.getMessage());
 			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);
 		}
 	}
+
+	/**
+	 * 
+	 * @param activeChat ArrayList of ChatMessage objects
+	 * @return A List containing the generated HTML from each message
+	 */
+	private List<String> getMsgHistoryHtml(List<ChatMessage> activeChat) {
+		List<String> activeChatHtml = new ArrayList<String>();
+		for (int i = 0; i < activeChat.size(); i++){
+
+			boolean isLastMsg = false;
+			ChatMessage msg = activeChat.get(i);
+
+			if(i == activeChat.size() - 1){	isLastMsg = true; }
+			activeChatHtml.add(msg.toHtml(loggedUserID, isLastMsg));
+		}
+		return activeChatHtml;
+	}
+
 	/**
 	 * Retrieves all the chats where the user is participating
 	 * @return Array list containing the chats of the user, ordered by last message delivery time
 	 * */
-	private ArrayList<ChatBean> getAllChats() throws ServletException, IOException {
-		ArrayList<ChatBean> chatList = new ArrayList<ChatBean>();
-		
-		try {
-			
-			
-			/*
-	    	 * Call JPA to perform:
-	    		SELECT chat FROM chatList WHERE chat.buyer == session.myID OR chat.seller == session.myID ORDER BY chat.lastMsg.Date
-	    	Query query = entityManger.createNamedQuery("findChatsByUser");
-	    	query.setParameter("user", session.myId);
-	    	List<ChatBean> chatList = query.getResultList();
-	    	
-	    	if (oChats != null) {
-				chatList = (List<ChatBean>) oChats;
-			}else {
-				chatList = null;
+	private List<ChatBean> getUserChats() throws ServletException, IOException {
+		List<ChatBean> userChats;
+
+		try {				
+			ChatDAOImpl chatDAO = new ChatDAOImpl(PERSISTENCE_UNIT);			
+			userChats = chatDAO.getChatsByUser(loggedUserID);
+
+			//Check if the user has any chat ()
+			if(!userChats.isEmpty()) {
+				/* If recipientUser is set, the logged user is trying to access directly to an specific chat.
+				 * Find that chat, involving both the logged user and the recipientUser, if exists. 
+				 * If it is not found create a new Chat instance.
+				 * */
+				if(recipientUser != -1) {
+					activeChatID = existChatWithUser(userChats, recipientUser);
+					if(activeChatID == -1) {				
+						//chat not found. The logged user is starting a new chat
+						//Create a new chat (locally) and add it to the local chatList (NOT COMMITED TO THE DB YET)
+						ChatBean oNewChat = new ChatBean(activeChatID, loggedUserID, recipientUser, "");
+						userChats.add(0, oNewChat);
+					}
+				}else {
+					//No recipientUser specified, the active chat will be, by default, the chat with the most recent message
+					ChatBean activeChat = userChats.get(0);
+					activeChatID = activeChat.getChatID();
+					recipientUser = activeChat.getBuyer() == loggedUserID ? activeChat.getSeller()
+							: activeChat.getBuyer();
+				}
 			}
-	    	 * 
-	    	 */
-			
-			return chatList;
+						
 		} catch (Exception e) {
-			System.out.println(
-					"JHC *************************************** Error in getAllChats(): "
-						+ e);
-			return null;
+			System.out.println("ERROR in getUserChats(): chats could not be retireved from the DB [" + e.getMessage() +"]");			
+			userChats = null;
 		}
-		
+		return userChats;
+
 	}
-	
+
+	/**
+	 * Creates a list of ChatElement objects based on a collection of ChatBeans
+	 * @param userChats List object containing the ChatBeans
+	 * @return a List object containing the chatElements created from the input. Null if there was any error
+	 * @throws Exception 
+	 */
+	private List<ChatElement> generateChatList(List<ChatBean> userChats) throws Exception {
+
+		List<ChatElement> chatList = new Vector<ChatElement>();	
+		if(!userChats.isEmpty()) {
+			try {
+
+				//Create a connection using the connectionFactory
+				Connection oConn = chatRoomFactory.createConnection();
+				// Next create the session. Indicate that transaction will not be supported
+				Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+				//For each ChatBean, create a ChatElement
+				for (ChatBean chat : userChats) {
+
+					ChatElement chatElem = new ChatElement(chat);
+					UserDAOImp userDAO = new UserDAOImp();
+					String chatType = "";
+					//Get the data from the other user participating in the chat, that is not the logged user
+					UserBean user;
+					if(chat.getBuyer() == loggedUserID) {
+						user = userDAO.getUserdata(chat.getSellerString());
+						chatType = ChatElement.CHAT_TO_BUY;
+					}else {
+						user = userDAO.getUserdata(chat.getBuyerString());
+						chatType = ChatElement.CHAT_TO_SELL;
+					}					
+
+					//Get the JMSMessageID of the current chat
+					String lastMsgId = chat.getLastMsgId();
+
+
+					//Create the message selector		     		     
+					String selector = "JMSMessageID = " + lastMsgId;		      
+					// Create a browser to retrieve selected message
+					QueueBrowser oBrowserConsumer = oSession.createBrowser(queue, selector);		      
+					oConn.start();
+
+					// User the browser to retrieve a collection (enumeration) of messages
+					@SuppressWarnings("rawtypes")
+					java.util.Enumeration enum1 = oBrowserConsumer.getEnumeration();
+
+					String lastMsgTxt = "";
+					long lastMsgDate = 0L;
+
+					//enum1 should only contain one element, thus the loop is broken after reading the first message 
+					while (enum1.hasMoreElements()) {
+						// Get the first message from the enumeration
+						Object oMessage = enum1.nextElement();
+
+						// Check if the message is an instance of TextMessage
+						if (oMessage instanceof TextMessage) {
+							//Get the interesting properties from the message
+							lastMsgTxt = (String) ((TextMessage) oMessage).getText();
+							lastMsgDate = ((TextMessage) oMessage).getJMSTimestamp();							
+							break;
+						}else {
+							//If the message is not a valid the whole search is stopped
+							throw new JMSException("The message " + lastMsgId + " is not a TextMessage");
+						}							
+					}
+
+					//Set the values of the chatElem
+					chatElem.setRecipientUser(user.getName() + " " + user.getSurname());
+					chatElem.setLastMsgText(lastMsgTxt);
+					chatElem.setLastMsgDate(lastMsgDate);
+					chatElem.setChatType(chatType);
+
+					// Close the browser created for the current chat
+					oBrowserConsumer.close();			
+
+				}//End of loop
+
+				// Close session
+				oSession.close();
+				// Close connection
+				oConn.close();
+			} catch (Exception e) {
+				System.out.println("UNEXPECTED ERROR in getChatList: " + e.getMessage());
+				e.printStackTrace();
+				chatList = null;
+			}		
+
+		}
+		return chatList;		
+	}
+
 	/**
 	 * Retrieve a list with all the messages between two users
-	 * THIS IMPLEMENTATION DOES NOT CONSIDER MESSAGES STORED IN THE DB, ONLY IN THE SERVER
-	 * */
-	private List<ChatMessage> getActiveChat() throws ServletException, IOException {
-				
+	 * This implementation does not consider storing messages in the DB, only in the server
+	 * @return A List object containing all the messages corresponding to the chat 'activeChatId'
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private List<ChatMessage> getActiveChatMessages() throws ServletException, IOException {
+
 		try {
 
 			// Create a connection using the connectionFactory
-		      Connection oConn = tiwconnectionfactory.createConnection();
-		      // Next create the session. Indicate that transaction will not be supported
-		      Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		      
-		      //NOT NECESSARY NOW
-		      //Query the DB to obtain the chatID of the active chat
-		      //myID = getAttribute("ID")
-		      //SELECT chat.ID FROM chatList WHERE (conv.user==me AND conv.ID = user.activeChat)
-		      // or directly SELECT chat.ID FROM chatList WHERE chat.ID == user.activeChat
-		      
-		      
-		      //Create the message selector		     		     
-		      String selector = "chatID = " + String.valueOf(activeChatID);		      
+			Connection oConn = chatRoomFactory.createConnection();
+			// Next create the session. Indicate that transaction will not be supported
+			Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+			//Create the message selector		     		     
+			String selector = "chatID = " + String.valueOf(activeChatID);		      
 			// USe the session to create a browser associated to the queue
-		      QueueBrowser oBrowserConsumer = oSession.createBrowser(queue, selector);
-		      //QueueBrowser oBrowserConsumer = oSession.createBrowser(queue);
-			//Start the connection
-		      oConn.start();
+			QueueBrowser oBrowserConsumer = oSession.createBrowser(queue, selector);		      
+			oConn.start();
+
+			List<ChatMessage> activeChat = new ArrayList<ChatMessage>();
+			
 			// User the browser to retrieve a collection (enumeration) of messages
 			@SuppressWarnings("rawtypes")
 			java.util.Enumeration enum1 = oBrowserConsumer.getEnumeration();
+
 			
-			ArrayList<ChatMessage> activeChat = null;
-			
-			if (enum1.hasMoreElements()) {
-				activeChat = new ArrayList<ChatMessage>();
-				
+
+			if (enum1.hasMoreElements()) {				
+
 				while (enum1.hasMoreElements()) {
 					// Get a message from the enumeration
 					Object oMessage = enum1.nextElement();
-					
-					ChatMessage msg = new ChatMessage();
-								
-					
+
 					// Check if the message is an instance of TextMessage
 					if (oMessage instanceof TextMessage) {
-						
-						//Set the message
-						msg.setMsg(((TextMessage) oMessage).getText());
-						//Set the delivery time						
-						Long deliveryTime;
-						try {
-							//deliveryTimo = ((TextMessage) oMessage).getLongProperty("deliveryTime");
-							deliveryTime = ((TextMessage) oMessage).getJMSTimestamp();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							System.out.println("ERROR: the delivery timestamp of this message is not valid");
-							deliveryTime = 0L;
-						}
-						
-						msg.setDeliveryTime(deliveryTime.longValue());
-						
-						//Set the sender
-						Integer iSenderID;
-						try {
-							iSenderID = ((TextMessage) oMessage).getIntProperty("senderID");
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							System.out.println("ERROR: This message has no valid senderID");
-							//iSenderID = 1313;
-						}																		
-						System.out.println("**************************READ MESSAGE FROM USER " + iSenderID);
-						msg.setSenderID(iSenderID.intValue()); 												
-						
-						
 						//Add the msg to the list						
-						activeChat.add(msg);		
-					}
-					// If it is an instance of TextMessage, cast it and add it to the out
-					
+						activeChat.add(new ChatMessage(oMessage));		
+					}										
 				}
 			}
-			
-			
-								
-			// Stop connection 
-			//oConn.stop(); //GENERATES a JMSException
+
 			// Close browser
-			oBrowserConsumer.close();
-			
+			oBrowserConsumer.close();			
 			// Close session
 			oSession.close();
 			// Close connection
 			oConn.close();
-			
-			
+
 			return activeChat;
-			
+
 		} catch (Exception e) {
-			System.out.println(
-				"JHC *************************************** Error in getActiveChat: ");
+			System.out.println("UNEXPECTED ERROR in getActiveChat: " + e.getMessage());	
 			e.printStackTrace();
 			return null;
 		}				
 	}
-	
+	/**
+	 * Checks if exist a chat between the logged user and the one specified.
+	 * if the chat exist within Chatlist, then returns the corresponding chatID
+	 * @param userChats List containing all the chats involving the logged user
+	 * @param userId User recipient of the messages
+	 * @return the chatID of the chat between the logged user and the specified user. 
+	 * -1 if no coincidence was found
+	 */
+	private long existChatWithUser(List<ChatBean> userChats, int userId) {
+
+		for (ChatBean chat : userChats) {
+			if(chat.isBetween(loggedUserID, userId)) {
+				return chat.getChatID();
+			}					
+		}
+		return -1L;
+
+	}
+
 }

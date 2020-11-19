@@ -1,4 +1,4 @@
-package jhc.jms;
+package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,13 +31,12 @@ public class ReadMessageQueueServlet extends HttpServlet {
 	private static final String ERROR_JSP = "/ErrorPage.jsp";
 
     
-	 // Inject the connectionFactory using annotations
-	 //.. . .
-	@Resource(mappedName = "tiwconnectionfactory") //logic name
-	 private ConnectionFactory tiwconnectionfactory;
-	 // Inject the queue using annotations
-	 //. . . 
-	@Resource(mappedName = "tiwqueue")
+	// Inject the Connection Factory
+	@Resource(mappedName = "ChatRoomFactory") //logic name
+	 private ConnectionFactory chatRoomFactory;
+	
+	 // Inject the queue
+	@Resource(mappedName = "ChatRoomQueue")
 	 private Queue queue;
 	 
 	 
@@ -78,7 +77,7 @@ public class ReadMessageQueueServlet extends HttpServlet {
 
 			
 			// Create a connection using the connectionFactory
-		      Connection oConn = tiwconnectionfactory.createConnection();
+		      Connection oConn = chatRoomFactory.createConnection();
 		      // Next create the session. Indicate that transaction will not be supported
 			Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 					

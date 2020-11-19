@@ -1,4 +1,4 @@
-package jhc.jms;
+package servlets;
 
 import java.io.IOException;
 
@@ -8,173 +8,150 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.oracle.jrockit.jfr.Producer;
-
-import beans.ChatMessage;
-
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.util.Date;
-
+import entities.ChatBean;
+import entities.ChatDAOImpl;
 import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import javax.jms.Connection;
 import javax.jms.Session;
 import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 
 /**
  * Servlet implementation class SendMessageQueueServlet
  */
-@WebServlet(urlPatterns = {"/SendMessageQueue.html"})
+@WebServlet(urlPatterns = {"/SendMessage"})
 public class SendMessageQueueServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String CHATROOM_PAGE = "/chatroom";
+	private static final String ERROR_JSP = "/errorPage.jsp";
+	private static final String PERSISTENCE_UNIT = "online_shop";
 	private ServletConfig config;
+	private int loggedUserId;
+	private long activeChatID;
 
-	 // Inject the connectionFactory using annotations
-	 //.. . .
-	@Resource(mappedName = "tiwconnectionfactory") //logic name
-	 private ConnectionFactory tiwconnectionfactory;
-	 // Inject the queue using annotations
-	 //. . . 
-	@Resource(mappedName = "tiwqueue") //logic name
-	 private Queue queue;
-	 
-	 
-	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public SendMessageQueueServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public void init(ServletConfig config) throws ServletException {
-    	this.config = config;
-    }
+	// Inject the Connection Factory
+	@Resource(mappedName = "ChatRoomFactory") //logic name
+	private ConnectionFactory chatRoomFactory;
 
-			
-	public void doPost(
-			javax.servlet.http.HttpServletRequest request,
-			javax.servlet.http.HttpServletResponse response)
-			throws javax.servlet.ServletException, java.io.IOException {
-			
-		/*
-			response.setContentType("text/html");
-			PrintWriter out = response.getWriter();
-			out.println("<html>");
-			out.println("<head><title>Sending message to a queue</title></head>");
-			out.println("<body>");
-			out.println("<H1><U>Sending the message</U></H1>");
-			*/
+	// Inject the queue
+	@Resource(mappedName = "ChatRoomQueue")
+	private Queue queue;
 
-			try {
 
-				
-				// - In the following steps we write the message and send it				
-				// First create a connection using the connectionFactory
-			      Connection oConn = tiwconnectionfactory.createConnection();
-			      // Next create the session. Indicate that transaction will not be supported
-					Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-				// Now use the session to create a message producer associated to the queue
-					MessageProducer oProducer = oSession.createProducer(queue);
-				 // Now use the session to create a text message
-					TextMessage txtMsg = oSession.createTextMessage();
-					//Serializable ChatMessageBean = new ChatMessageBean();
-					
-					//ObjectMessage oMsg = oSession.createObjectMessage();
-				//  We retrieve the parameter 'message' from the request, and use it as text of our message
-					txtMsg.setText(request.getParameter("message"));
-					//ChatMessageBean chatMsg = (beans.ChatMessageBean) oMsg.getObject();
-					
-					long chatID = -1L;
-					//Query to the DB the conversations of the users
-					//SELECTS conv.ID FROM chatList WHERE conv.user == me
-					//forEach conv.ID{IF conv.ID.contains(otherUser.Id) THEN break}
-					if(chatID == -1L) {
-						//new chatID, given by the DB has a unique identifier
-						chatID = 1L;
-					}
-					int myID = 1312;					
-					//String myID = "1312";
-					
-					/*
-					//Fill the chatMessage object
-					chatMsg.setDeliveryTime(System.currentTimeMillis());
-					chatMsg.setSenderID(myID);
-					chatMsg.setMsg(request.getParameter("message"));
-					*/
-					
-					//Add the property chatID
-					//oMsg.setLongProperty("chatID", chatID);
-					txtMsg.setLongProperty("chatID", chatID);
-					txtMsg.setLongProperty("deliveryTime", System.currentTimeMillis());
-					
-					txtMsg.setIntProperty("senderID", myID); //session.myID			
 
-					//txtMsg.setStringProperty("senderID", myID);					
-					
-				// Use the message producer to send the message	
-					oProducer.send(txtMsg);
-				// Close the producer
-				oProducer.close();
-				// Close the session 
-				oSession.close();
-				// Close the connection 
-				oConn.close();
-				
-				//Redirect
-				config.getServletContext().getRequestDispatcher("/ReadMessageQueueBrowser.html").forward(request, response);
-				
-				//out.println(" Menssage sent </BR>");
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public SendMessageQueueServlet() {
+		super();
+	}
 
-			} catch (javax.jms.JMSException e) {
-				System.out.println(
-					"JHC *************************************** Error in doPost: "
-						+ e);
-				System.out.println(
-					"JHC *************************************** Error MQ: "
-						+ e.getLinkedException().getMessage());
-				System.out.println(
-					"JHC *************************************** Error MQ: "
-						+ e.getLinkedException().toString());		
-				System.out.println(" Error when sending the message</BR>");
-		
-				
-			}catch (Exception e) {
-				System.out.println(
-					"JHC *************************************** Error in doPost: "
-						+ e.toString());
-				System.out.println(" Error when sending the message</BR>");
-				
+	public void init(ServletConfig config) throws ServletException {
+		this.config = config;
+	}
+
+	public void doPost( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+
+			ChatBean activeChat = new ChatBean();
+
+			//Obtain attributes from the session
+			HttpSession oHttpSession = request.getSession();
+			loggedUserId = (int) oHttpSession.getAttribute("user_id");					
+			activeChatID = (long) oHttpSession.getAttribute("activeChat");
+
+			//Obtain attributes from the request
+			//Id of the user recipient of the messages.
+			int recipientUser = (int) request.getAttribute("sendTo");
+
+
+			//Create a message Producer using the predefined Connection Factory
+			Connection oConn = chatRoomFactory.createConnection();
+			Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			MessageProducer oProducer = oSession.createProducer(queue);
+
+			//Create DAO
+			ChatDAOImpl chatDAO = new ChatDAOImpl(PERSISTENCE_UNIT);
+
+			//If active chat == -1 --> is a new chat
+			if(activeChatID == -1) {
+				//Create a new ChatBean instance and call JPA
+				ChatBean oNewChat = new ChatBean();
+				//oNewChat.setChatID(chatID);//THIS ID should be only set by the JPA
+				oNewChat.setBuyer(loggedUserId);
+				oNewChat.setSeller(recipientUser);
+				oNewChat.setLastMsgId("");
+
+				chatDAO.insert(oNewChat);
+
+				activeChatID = oNewChat.getChatID();
+				activeChat = oNewChat;
+
+
+			}else {
+				//The chat already exist. Retrieve it from the DB
+				activeChat = chatDAO.getChatById(activeChatID);
 			}
-			/*
-			out.println(
-			" >>>>>>  <A href=\"SendMessageToQueue.html\">Back</A></P>");
-			out.println("</body></html>");
-			*/
+
+			//Create the message
+			TextMessage txtMsg = oSession.createTextMessage();
+
+			//Retrieve the parameter 'message' from the request, and use it as text of our message
+			txtMsg.setText(request.getParameter("message"));				
+
+			//Set additional properties of the message			
+			txtMsg.setLongProperty("chatID", activeChatID);			
+			txtMsg.setIntProperty("senderID", loggedUserId);								
+
+			// Use the message producer to send the message	
+			oProducer.send(txtMsg);
+
+			//Update the lastMessageId value in the DB
+			activeChat.setLastMsgId(txtMsg.getJMSMessageID());
+			chatDAO.update(activeChat);
+
+			// Close the producer
+			oProducer.close();
+			// Close the session 
+			oSession.close();
+			// Close the connection 
+			oConn.close();
+
+			//Redirect
+			config.getServletContext().getRequestDispatcher(CHATROOM_PAGE).forward(request, response);
+
+		} catch (JMSException e) {
+			System.out.println("UNEXPECTED ERROR with the Message Queue while sending the message [" + e.getMessage() + "]");
+			e.printStackTrace();
+			request.setAttribute("errorMsg", e.getMessage());			
+			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);
+
+		}catch (Exception e) {
+			System.out.println("UNEXPECTED ERROR in doPost: message not sent [" + e.getMessage() + "]");
+			e.printStackTrace();
+			request.setAttribute("errorMsg", e.getMessage());
+			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);
+		}
+	}
+
+	public void doGet( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		try {
+			//Call doPost instead
+			doPost(request, response);
+		} catch (Exception e) {
+			System.out.println("UNEXPECTED ERROR in doGet: " + e.getMessage() + "]");
+			e.printStackTrace();
+			request.setAttribute("errorMsg", e.getMessage());
+			config.getServletContext().getRequestDispatcher(ERROR_JSP).forward(request, response);
 		}
 
-				public void doGet(
-					javax.servlet.http.HttpServletRequest request,
-					javax.servlet.http.HttpServletResponse response)
-					throws javax.servlet.ServletException, java.io.IOException {
-
-					try {
-						//Llamamos al m�todo doPost con los parametros que recibe este m�todo
-						doPost(request, response);
-					} catch (Exception e) {
-						System.out.println(
-							"JHC ***************************************Error in doGet: "
-								+ e);
-					}
-
-				}
+	}
 
 }

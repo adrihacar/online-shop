@@ -1,11 +1,20 @@
-package beans;
+package entities;
 
 import static javax.persistence.GenerationType.AUTO;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NamedQueries({
 	@NamedQuery(name="findChatsByUser",
-			query="SELECT c FROM ChatBean c WHERE (c.buyer =:user OR c.seller =: user) ORDER BY c.lastMsgId DESC"),
+			query="SELECT c FROM ChatBean c WHERE c.buyer= :user OR c.seller= :user ORDER BY c.lastMsgId DESC"),
 	@NamedQuery(name ="updateLastMsg",
 			query="UPDATE ChatBean c SET c.lastMsgId = :latestMsgId")
 })
@@ -16,7 +25,7 @@ public class ChatBean {
 	
 	@Id
 	@GeneratedValue(strategy = AUTO)
-	private long chatID;
+	private long id;
 	
 	@Column(name="buyer")
 	@NotNull
@@ -27,7 +36,7 @@ public class ChatBean {
 	private int seller;
 	
 	@Column(name="lastMsgId")
-	//May be null (if the chat has been created but no messages have been sent)
+	@NotNull	
 	private String lastMsgId;
 	
 
@@ -36,34 +45,28 @@ public class ChatBean {
 	public ChatBean() {}
 	
 	/** Complete constructor */
-	public ChatBean(long chatID, int buyer, int seller, String lastMsgId) {
-		super();
-		this.chatID = chatID;
-		/* Table chatList = chatID | buyer | seller 
-		 * buyer is the active user, starting the conversation (wants to buy a product)
-		 * seller is the passive user (has a product to sell)
-		 * In this way the passive users can quickly report those users that are using the chat to spam advertising 
-		 * 
-		 * This field is the result of 
-		 *  
-		 * 	SELECT chat FROM chatList WHERE chat.buyer == session.myID OR chat.seller == session.myID*/
-			
+	public ChatBean(long chatID, int buyer, int seller, String lastMsgId) {		
+		this.id = chatID;
 		this.buyer = buyer;
 		this.seller = seller;
 		this.lastMsgId = lastMsgId;
 	}
 
 	public long getChatID() {
-		return chatID;
+		return id;
 	}
 
 	public void setChatID(long chatID) {
-		this.chatID = chatID;
+		this.id = chatID;
 	}
 
 	public int getBuyer() {
 		return buyer;
 	}
+	
+	public String getBuyerString() {
+		return String.valueOf(buyer);
+	}	
 
 	public void setBuyer(int buyerID) {
 		this.buyer = buyerID;
@@ -71,6 +74,10 @@ public class ChatBean {
 
 	public int getSeller() {
 		return seller;
+	}
+	
+	public String getSellerString() {
+		return String.valueOf(seller);
 	}
 
 	public void setSeller(int sellerID) {
@@ -84,6 +91,19 @@ public class ChatBean {
 	public void setLastMsgId(String lastMsgId) {
 		this.lastMsgId = lastMsgId;
 	}
+	/**
+	 * Checks if the calling chat has the specified users as participants (buyer and seller)
+	 * 
+	 * @param user1 ID of a user having a conversation
+	 * @param user2 ID of a user having a conversation
+	 * @return True if the chat is between the two users specified in the parameters
+	 */
+	public boolean isBetween(int user1, int user2) {
+		boolean from1to2 = (this.getBuyer() == user1 && this.getSeller() == user2);
+		boolean from2to1 = (this.getBuyer() == user2 && this.getSeller() == user1); 
+		return (from1to2 || from2to1);			
+	}
+	
 
 
 	
