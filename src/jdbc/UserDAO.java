@@ -9,7 +9,7 @@ interface UserDAO {
 	public void insertUser(UserBean user);
 	public boolean checkUser(String email, String hashedPassword);
 	public void updateUser(UserBean user, int id);
-	public UserBean getUserdata(String id);
+	public UserBean getUserdata(int id);
 	public String getSaltFromDatabase(String email);
 	int getIdFromEmail(String email);
 	public List<UserBean> getAllUsers();
