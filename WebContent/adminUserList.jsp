@@ -74,6 +74,11 @@
      
       <div class="row">
       <% Object UsersObject = request.getAttribute("users");
+         if(UsersObject == null) {
+			request.setAttribute("errorMsg", "Not able to load the products!");	
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		 }
     	 List<UserBean> users = (List<UserBean>)UsersObject;
     	 UserDAOImp userDAO = new UserDAOImp();
          for(int i = 0; i < users.size(); i++){ 

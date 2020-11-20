@@ -79,9 +79,21 @@
                     <div class="cart_items">
                         <ul class="cart_list">
                             <% Object productsObject = request.getAttribute("products");
+                            if(productsObject == null) {
+                        		request.setAttribute("errorMsg", "Not able to load the products!");	
+                        		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+                        		rd.forward(request, response);
+                            }
     	 					List<ProductBean> products = (List<ProductBean>)productsObject;
+    	 					
     	 					Object cartProductsObject = request.getAttribute("cartproducts");
+    	 					if(cartProductsObject == null) {
+                        		request.setAttribute("errorMsg", "Not able to load the carts products!");	
+                        		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+                        		rd.forward(request, response);
+                            }
    	 					    List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
+   	 					    
    	 					    double totalPrice = 0;
          					for(int i = 0; i < products.size(); i++){ %>
                             <li class="cart_item clearfix">

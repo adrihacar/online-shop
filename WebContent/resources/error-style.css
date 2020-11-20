@@ -10,7 +10,7 @@ body{ background: #6BA1CA; }
     position: absolute;
     top: 90%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 100%);
     padding: 2vh;
     background: #eed269;
     font-size: 4vh;

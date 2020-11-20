@@ -102,9 +102,20 @@
       </h4>
       <ul class="list-group mb-3">
         <% Object productsObject = request.getAttribute("products");
-    	List<ProductBean> products = (List<ProductBean>)productsObject;
-    	Object cartProductsObject = request.getAttribute("cartproducts");
-   	 	List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
+        if(productsObject == null) {
+    		request.setAttribute("errorMsg", "Not able to load the products!");	
+    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    		rd.forward(request, response);
+        }
+			List<ProductBean> products = (List<ProductBean>)productsObject;
+			
+			Object cartProductsObject = request.getAttribute("cartproducts");
+			if(cartProductsObject == null) {
+    		request.setAttribute("errorMsg", "Not able to load the carts products!");	
+    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    		rd.forward(request, response);
+        }
+		    List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
    	 	double totalPrice = 0;
         for(int i = 0; i < products.size(); i++){ %>
         <li class="list-group-item d-flex justify-content-between lh-condensed">

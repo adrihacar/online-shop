@@ -80,7 +80,11 @@
                     <%
 
                     	Object purchasesObj = request.getAttribute("purchases");                    		
-                    	
+                        if(purchasesObj == null) {
+                		   request.setAttribute("errorMsg", "Not able to load the purchased products!");	
+                		   RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+                		   rd.forward(request, response);
+                        }
                     	List<PurchasedCart> purchases;
                     	if(purchasesObj != null){
                     		purchases = (ArrayList<PurchasedCart>) purchasesObj;

@@ -23,6 +23,11 @@
 	    <p class='h4 mb-4'>Edit User</p>
 		<%
 		Object object = request.getAttribute("user");
+		if(object == null) {
+    		request.setAttribute("errorMsg", "Not able to load the products!");	
+    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    		rd.forward(request, response);
+        }
 		UserBean user = (UserBean) object;
 		
 		%>

@@ -20,6 +20,11 @@
   <body style="background: #6d2eff;">
   <%
   Object userObject = session.getAttribute("user_id");
+  if(userObject == null) {
+		request.setAttribute("errorMsg", "Not able to load the products!");	
+		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+		rd.forward(request, response);
+  }
   int user = ((Integer) userObject).intValue();
   UserDAOImp userDAO = new UserDAOImp();
   if(userDAO.isAdmin(user)) {    

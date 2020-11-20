@@ -15,6 +15,12 @@
 <% 
 //Obatain needed data from the request 
 int errorCode = response.getStatus();
+Object errorMsgObj = request.getAttribute("errorMsg");
+if(errorMsgObj == null) {
+	   request.setAttribute("errorMsg", "Did you tried to access the error page directly? Here it is! ;)");	
+	   RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+	   rd.forward(request, response);
+ }
 String errorMsg = (String) request.getAttribute("errorMsg");
 String htmlErrorElem = "<div class=\"error-desc\" data-text=\""; 
 htmlErrorElem += ErrorPage.DEFAULT_MSG + ErrorPage.SEPARATOR + "ERROR " + errorCode + "   REF: " + errorMsg + "\">";
