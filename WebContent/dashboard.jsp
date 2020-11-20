@@ -59,6 +59,9 @@
                   <a class="nav-link" href="./editUser">My user</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="./logout">Log out</a>
+                </li>
+                <li class="nav-item">
 			<form action='/online_shop/Catalog' method='get'>
                 <button class="nav-link" type='submit'>Catalog</button>
 			</form>
