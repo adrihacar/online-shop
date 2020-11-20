@@ -1,6 +1,8 @@
 package servlets;
 
 import java.io.IOException;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,10 +13,11 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LogOutServlet
  */
+
 @WebServlet("/logout")
 public class LogOutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	 private ServletConfig config;   
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -22,7 +25,12 @@ public class LogOutServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    
+    public void init(ServletConfig config) throws ServletException {
+    	System.out.println("entro en init logout");
+	}
+   
+    
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -31,7 +39,7 @@ public class LogOutServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		session.setAttribute("user_id", null);
 		System.out.println("entro en logout");
-		response.sendRedirect("/online_shop");
+		response.sendRedirect("./home.jsp");
 	}
 
 	/**
