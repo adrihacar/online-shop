@@ -88,7 +88,7 @@
               <h4><%= users.get(i).getEmail() %></h4>
               <p class="card-text"><%= users.get(i).getName()%>&nbsp;<%= users.get(i).getSurname() %></p>
               <div class="d-flex justify-content-between align-items-center">
-			  <form action='/online_shop/editUser' method='post'>
+			  <form action='/online_shop/editUser' method='get'>
                 	<button name="idUser" value="<%= users.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
 		      </form>
                 <form action='/online_shop/deleteUser' method='post'>

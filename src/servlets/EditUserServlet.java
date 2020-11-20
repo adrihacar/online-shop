@@ -94,7 +94,11 @@ public class EditUserServlet extends HttpServlet {
 				
 				userDAOImp.updateUser(user, id);
 			}
-			response.sendRedirect("/online_shop/dashboard");
+			if(userDAOImp.isAdmin(session_id)) {
+				response.sendRedirect("/online_shop/AdminProductsServlet");
+			} else {
+				response.sendRedirect("/online_shop/dashboard");
+			}
 		}
 
 	}
