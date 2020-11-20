@@ -49,7 +49,7 @@ public class DeleteUserServlet extends HttpServlet {
 			response.sendRedirect("/online_shop/AdminProductsServlet");
 		} else {
 			userDAO.deleteUser(currentUser);
-			response.sendRedirect("/home.jsp");
+			response.sendRedirect("./home.jsp");
 		}
 	}
 

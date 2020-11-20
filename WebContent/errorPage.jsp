@@ -9,7 +9,7 @@
 <meta charset="ISO-8859-1">
 <title>Error page</title>
 <script src="resources/error-script.js"></script>
-<link rel="stylesheet" href="resources/error-style.css">
+<link rel="stylesheet" href="resources/error-style.css"></link>
 </head>
 <body onload="displayError()">
 <% 
@@ -33,6 +33,6 @@ out.println(htmlErrorElem);
     <plate></plate>
   </spaguetti>
 
-	<a class="home-button" href="./home.jsp" >Go Back Home </a>
+	<a style="transform: translate(-50%, 100%);" class="home-button" href="./home.jsp" >Go Back Home </a>
 </body>
 </html>

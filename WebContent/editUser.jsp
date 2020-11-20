@@ -18,7 +18,7 @@
 	  
  	
 		<!-- Default form register -->
-	<form action='/online_shop/editUser' method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 100px;'>
+	<form action='/online_shop/editUser' method='post' class='text-center border border-light container' style='width:650px; margin-top: 100px;'>
 	
 	    <p class='h4 mb-4'>Edit User</p>
 		<%
@@ -36,7 +36,7 @@
 	    <!-- E-mail -->
 	    <input name='Id' value="<%=user.getId()%>" type='hidden' id='defaultRegisterFormId' class='form-control mb-4' placeholder='Id'>
 		
-		<%=user.getEmail()%>"
+		<%=user.getEmail()%>
 		
 	    <div class='form-row mb-4'>
 	        <div class='col'>
@@ -61,14 +61,18 @@
 		
 	    <!-- Sign up button -->
 	    <button class='btn btn-info my-4 btn-block' type='submit'>Save</button>
-	
+		
 	    <hr>
-	
-	    <!-- Terms of service -->
+	<!-- Terms of service -->
 	    <p>By clicking
 	        <em>Save</em> you agree to our
 	        <a href='' target='_blank'>terms of service</a>
+		
+	</form>
 	
+	<form  method='post' action="/online_shop/deleteUser"  class='text-center border border-light container' style='width:650px;'>
+	<!-- Delete user button -->
+	    <button type="submit" class='btn btn-danger my-4 btn-block'>DELETE ACCOUNT</button>
 	</form>
  
   }

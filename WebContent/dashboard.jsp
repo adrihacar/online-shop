@@ -52,19 +52,17 @@
                   <button class="nav-link" type='submit'>Home </button>
                 </form>
                 </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
+                <li class="nav-item">
+                  <a class="nav-link" href="./addProduct.jsp">Add product</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="./editUser">My user</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./logout">Log out</a>
+                  <a style="color=red;" class="nav-link" href="./logout">Log out</a>
                 </li>
                 <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
+                  <a class="nav-link" href="./Catalog">Catalog</a>
             </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
