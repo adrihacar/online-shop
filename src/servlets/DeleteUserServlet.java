@@ -39,16 +39,17 @@ public class DeleteUserServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int idUser = Integer.parseInt(request.getParameter("idUser"));
+		
 		HttpSession session = request.getSession(true);
 		int currentUser = (int) session.getAttribute("user_id");
 		
-		userDAO.deleteUser(idUser);
-				
 		if(userDAO.isAdmin(currentUser)) {
+			int idUser = Integer.parseInt(request.getParameter("idUser"));
+			userDAO.deleteUser(idUser);
 			response.sendRedirect("/online_shop/AdminProductsServlet");
 		} else {
-			response.sendRedirect("/online_shop/dashboard");
+			userDAO.deleteUser(currentUser);
+			response.sendRedirect("/home.jsp");
 		}
 	}
 

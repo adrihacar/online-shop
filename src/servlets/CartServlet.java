@@ -30,6 +30,7 @@ import entities.ProductDAOImpl;
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private ServletConfig config;
 	
 	// DAOs
 	CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
@@ -45,7 +46,7 @@ public class CartServlet extends HttpServlet {
     }
     
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		this.config = config;
 	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,7 +55,13 @@ public class CartServlet extends HttpServlet {
 		
 		// TODO get user id
 		HttpSession session = request.getSession(true);
-        int user = (int) session.getAttribute("user_id");
+		Object userObject = session.getAttribute("user_id");
+		if(userObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");	
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		}
+		int user = (int) userObject;
 		
 		// get cart of user
 		CartBean cart = cartDAO.findCartByUser(user);
@@ -90,7 +97,12 @@ public class CartServlet extends HttpServlet {
 		if (action.equals("addToCart")) {
 			// get user id
 			HttpSession session = request.getSession(true);
-	        int user = (int) session.getAttribute("user_id");
+			Object userObject = session.getAttribute("user_id");
+			if(userObject == null) {
+				request.setAttribute("errorMsg", "There is no user in the session!!");			
+				config.getServletContext().getRequestDispatcher("/errorPage.jsp").forward(request, response);
+			}
+			int user = (int) userObject;
 			
 			// get cart of user
 			CartBean cart = cartDAO.findCartByUser(user);

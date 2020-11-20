@@ -122,7 +122,9 @@
         </li>
       </ul>
 
-   <form METHOD="POST" ACTION="checkout.jsp">
+   <form METHOD="POST" ACTION="/online_shop/payments">
+   
+   <input type="hidden" id="cart" name="cart" value="<%=request.getAttribute("cart").toString()%>">
     </div>
     <div class="col-md-8 order-md-1">
       <h3 class="mb-3">User Information</h3>
@@ -199,7 +201,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <label for="cc-number">Credit card number</label>
-            <input NAME="numberCard" type="text" class="form-control" id="cc-number" placeholder="" required>
+            <input NAME="paymethod" type="text" class="form-control" id="paymethod" placeholder="" required>
             <div class="invalid-feedback">
               Credit card number is required
             </div>

@@ -9,8 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NamedQueries({

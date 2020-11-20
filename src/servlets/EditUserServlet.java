@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +21,7 @@ import utils.CreateCart;
 @WebServlet("/editUser")
 public class EditUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private ServletConfig config;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -38,7 +39,13 @@ public class EditUserServlet extends HttpServlet {
 			idUser = Integer.parseInt(request.getParameter("idUser"));
 		}else {
 			HttpSession session = request.getSession();
-			idUser = (int) session.getAttribute("user_id");
+			Object idObject = session.getAttribute("user_id");
+			if(idObject == null) {
+				request.setAttribute("errorMsg", "There is no user in the session!!");			
+				RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+				rd.forward(request, response);
+			}
+			idUser = (int) idObject;
 		}
 		
 		//TODO check if this user id  is the same as the id that the user is looged
@@ -63,26 +70,32 @@ public class EditUserServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("Id"));
 
 		HttpSession session = request.getSession(true);
-		int session_id = (int) session.getAttribute("user_id");
+		Object idObject = session.getAttribute("user_id");
 		
-		UserDAOImp userDAOImp = new UserDAOImp();
-		
-		if(id == session_id || userDAOImp.isAdmin(session_id)) {
-			UserBean user = userDAOImp.getUserdata(id);
+		if(idObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		}else {
+			int session_id = (int) idObject;
 			
-			if(password != null && !password.equalsIgnoreCase("")) {
-				user = new UserBean(name,surname,user.getEmail(), location, password);
-			}else {
-				user.setName(name);
-				user.setSurname(surname);
-				user.setLocation(location);
+			UserDAOImp userDAOImp = new UserDAOImp();
+			
+			if(id == session_id || userDAOImp.isAdmin(session_id)) {
+				UserBean user = userDAOImp.getUserdata(id);
+				
+				if(password != null && !password.equalsIgnoreCase("")) {
+					user = new UserBean(name,surname,user.getEmail(), location, password);
+				}else {
+					user.setName(name);
+					user.setSurname(surname);
+					user.setLocation(location);
+				}
+				
+				userDAOImp.updateUser(user, id);
 			}
-			
-			userDAOImp.updateUser(user, id);
+			response.sendRedirect("/online_shop/dashboard");
 		}
-
-		response.sendRedirect("/online_shop/dashboard");
-
 
 	}
 

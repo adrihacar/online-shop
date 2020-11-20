@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -67,7 +68,13 @@ public class DeleteProductSrvlet extends HttpServlet {
 		}
 		
 		HttpSession session = request.getSession(true);
-		int seller = (int) session.getAttribute("user_id");
+		Object sellerObject = session.getAttribute("user_id");
+		if(sellerObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		}
+		int seller = (int) sellerObject;
 
 		if(userDAO.isAdmin(seller)) {
 			response.sendRedirect("/online_shop/AdminProductsServlet");
