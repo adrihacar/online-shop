@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <%
+    //If the user_id is already set it means that the user has been redirected to home from the error page.
+    //Thus since the user is already logged, he is redirected again to the dashboard 
+    if(session.getAttribute("user_id")!= null) response.sendRedirect("/online_shop/dashboard");
+    %>
 <!DOCTYPE html>
 <html lang="en">
   <head>

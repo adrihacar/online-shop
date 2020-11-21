@@ -8,7 +8,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Error page</title>
-<script src="resources/error-script.js"></script>
+<script src="resources/index.js"></script>
 <link rel="stylesheet" href="resources/error-style.css"></link>
 </head>
 <body onload="displayError()">

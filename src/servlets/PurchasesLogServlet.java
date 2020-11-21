@@ -2,7 +2,6 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -15,11 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import entities.CartBean;
 import entities.CartDAOImpl;
-import entities.PurchasedCart;
-import entities.CartProductBean;
-import entities.CartProductDAOImpl;
-import entities.ProductBean;
-import entities.ProductDAOImpl;
+import entities.UserCart;
 
 /**
  * Servlet implementation class PurchasesLogServlet
@@ -65,34 +60,28 @@ public class PurchasesLogServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		
-		List<PurchasedCart> purchases = null;
+		List<UserCart> purchases = null;
 		try {
-			CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
-			CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
-			ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
+			CartDAOImpl cartDAO = new CartDAOImpl("online_shop");			
 			
 			HttpSession oSession = request.getSession();
-			int user = (int) oSession.getAttribute("user_id");
+			Object userObject = oSession.getAttribute("user_id");
 			
-			
+			if(userObject == null) {
+				throw new Exception("There is no user logged in the session");				
+			}
+			int user = (int) userObject;
+						
 			// get the purchased carts of the logged user
 			List<CartBean> boughtCarts = cartDAO.findBoughtCartsByUser(user);
-			purchases = new ArrayList<PurchasedCart>();
+			purchases = new ArrayList<UserCart>();
 			
 			for (CartBean cart : boughtCarts) {
-				// get id of the products in the cart
-				List<CartProductBean> cartproducts = cartProductDAO.findProductsInCart(cart.getId()); //this can be sent to the jsp
-				
-				// retrieve products
-				List<ProductBean> products = new ArrayList<>();
-			    Iterator<CartProductBean> cartproductsIterator = cartproducts.iterator();
-			    while(cartproductsIterator.hasNext()) {
-			    	int productid = cartproductsIterator.next().getProduct();
-			    	ProductBean product = productDAO.findByID(productid);
-			    	products.add(product);
-			    }			    
-				purchases.add(new PurchasedCart(cart, products, cartproducts));						   
-			}			
+				UserCart boughtCart = new UserCart(user);				
+				boughtCart.setCartInfo(cart);
+				purchases.add(boughtCart);				
+			}
+			
 			//send needed attributes to the cart jsp
 			request.setAttribute("purchases", purchases);
 			config.getServletContext().getRequestDispatcher(PURCHASES_JSP).forward(request, response);

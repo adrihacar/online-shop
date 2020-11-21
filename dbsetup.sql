@@ -45,7 +45,8 @@ CREATE TABLE cartproducts (
     quantity INTEGER NOT NULL,
 
     FOREIGN KEY(cart) REFERENCES carts(id) ON DELETE CASCADE,
-    FOREIGN KEY(product) REFERENCES products(id) ON DELETE CASCADE
+    FOREIGN KEY(product) REFERENCES products(id) ON DELETE CASCADE,
+    CONSTRAINT no_duplicated_products UNIQUE (cart, product)
 );
 
 INSERT INTO users (name, surname, email, location, password, salt) VALUES

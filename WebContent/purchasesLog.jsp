@@ -1,9 +1,10 @@
-<%@page import="entities.PurchasedCart"%>
+<%@page import="entities.UserCart"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
-    import = "entities.PurchasedCart"    
+    import = "entities.UserCart"    
     import = "java.util.List"
     import = "java.util.ArrayList"
+    import = "entities.UserCart"
     import = "org.apache.commons.codec.binary.StringUtils" 
     import = "org.apache.commons.codec.binary.Base64"
     %>
@@ -76,26 +77,25 @@
                     <div class="cart_title" style="color:white">Your purchases</div>
                     <div class="cart_items">
                     <%
-
                     	Object purchasesObj = request.getAttribute("purchases");                    		
                         if(purchasesObj == null) {
                 		   request.setAttribute("errorMsg", "Not able to load the purchased products!");	
                 		   RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
                 		   rd.forward(request, response);
                         }
-                    	List<PurchasedCart> purchases;
+                    	List<UserCart> purchases;
                     	if(purchasesObj != null){
-                    		purchases = (ArrayList<PurchasedCart>) purchasesObj;
+                    		purchases = (ArrayList<UserCart>) purchasesObj;
                     		
                     		for(int i = 0; i < purchases.size(); i++){ 
-                        		PurchasedCart cart = purchases.get(i);%>                    		
+                        		UserCart cart = purchases.get(i);%>                    		
                         	                    		
                         		<div class="order_total">
                                 <div class="order_total_content text-md-right" style="display: inline-block;">
             					<div class="order_total_title">Date:</div>
             					<div class="order_total_amount margin_right" style="margin-right: 26px;"><%=cart.getDateToString()%></div>
             					<div class="order_total_title">Order Total:</div>
-            					<div class="order_total_amount margin_right" style="margin-right: 26px;"><%=String.format("%.2f", cart.getCartPrice()) %>€</div>
+            					<div class="order_total_amount margin_right" style="margin-right: 26px;"><%=cart.getCartPrice(UserCart.PRICE_PRECISION) %>€</div>
             					<div class="order_total_title">Shipping Address:</div>
             						<div class="order_total_amount margin_right" style="margin-right: 26px;"><%=cart.getAddress() %></div>
             	</div>
@@ -119,11 +119,11 @@
                                         </div>
                                         <div class="cart_item_price cart_info_col">
                                             <div class="cart_item_title">Price</div>
-                                            <div class="cart_item_text"><%= String.format("%.2f", cart.getProductPrice(j))%>€</div>
+                                            <div class="cart_item_text"><%= cart.getProductPrice(j, UserCart.PRICE_PRECISION)%>€</div>
                                         </div>
                                         <div class="cart_item_total cart_info_col">
                                             <div class="cart_item_title">Total</div>
-                                            <div class="cart_item_text"><%= cart.getProductTotalCost(j)%>€</div>                                        
+                                            <div class="cart_item_text"><%= cart.getProductTotalCost(j, UserCart.PRICE_PRECISION)%>€</div>                                        
                                         </div>
                                     </div>
                                 </li>

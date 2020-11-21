@@ -49,10 +49,11 @@ public class CartProductDAOImpl implements CartProductDAO{
 	@Override
 	public void update(CartProductBean cartproduct) throws Exception {
 		EntityManager entityManager = emf.createEntityManager();
-		entityManager.getTransaction().begin();	
+		entityManager.getTransaction().begin();
 		entityManager.merge(cartproduct);
 		entityManager.getTransaction().commit();
 		entityManager.close();
+
 	}
 
 	@Override

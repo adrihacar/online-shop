@@ -7,7 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.ServletContextEvent;
-import javax.transaction.UserTransaction;
 
 public class CartDAOImpl implements CartDAO{
 
