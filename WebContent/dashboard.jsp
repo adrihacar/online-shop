@@ -52,21 +52,22 @@
                   <button class="nav-link" type='submit'>Home </button>
                 </form>
                 </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
+                <li class="nav-item">
+                  <a class="nav-link" href="./addProduct.jsp">Add product</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
+                  <a class="nav-link" href="./editUser">My user</a>
                 </li>
                 <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
+                  <a style="color=red;" class="nav-link" href="./logout">Log out</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./Catalog">Catalog</a>
             </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
+                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
               </div>
 			</form>
 			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
@@ -102,6 +103,11 @@
 
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
+    		  if(productsObject == null) {
+    				request.setAttribute("errorMsg", "Not able to load the products!");	
+    				RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    				rd.forward(request, response);
+    			 }
     	 List<ProductBean> products = (List<ProductBean>)productsObject;
          for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
@@ -117,10 +123,15 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
-                    </div>
-                    <input type="number" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+                    <form action='/online_shop/cart' method='post' id="form<%=products.get(i).getId()%>">
+                      <input type="hidden" id="action" name="action" value="addToCart">
+                      <input type="hidden" id="product" name="product" value="<%=products.get(i).getId()%>">
+                      <input type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="" value="1">
+                      <div class="input-group-prepend">
+                        <button type="submit" form="form<%=products.get(i).getId()%>" value="Submit" name="idProduct" class="btn btn-outline-secondary" type="button" id="button-addon1">Add to cart</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

@@ -2,6 +2,8 @@ package entities;
 
 import java.util.List;
 
+import javax.servlet.ServletContextEvent;
+
 public interface ProductDAO {
 	
 	public void insert(ProductBean product) throws Exception;
@@ -13,5 +15,6 @@ public interface ProductDAO {
 	public List<ProductBean> getProductsStatusBySeller(int custSeller, int custStatus);
 	public ProductBean findByID(int id);
 	public List<ProductBean> getProductByCategory(int category);
+	void contextDestroyed(ServletContextEvent sce);
 
 }

@@ -15,8 +15,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
 	@NamedQuery(name="findChatsByUser",
 			query="SELECT c FROM ChatBean c WHERE c.buyer= :user OR c.seller= :user ORDER BY c.lastMsgId DESC"),
-	@NamedQuery(name ="updateLastMsg",
-			query="UPDATE ChatBean c SET c.lastMsgId = :latestMsgId")
+	//@NamedQuery(name ="updateLastMsg",
+	//		query="UPDATE ChatBean c SET c.lastMsgId = :latestMsgId")  // FIX MERGE, named query wasnt working and wasnt used
 })
 @Table(name="chats")
 public class ChatBean {

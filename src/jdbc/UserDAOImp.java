@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -127,8 +129,10 @@ public class UserDAOImp implements UserDAO{
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
 				st = con.createStatement();
-				st.executeUpdate("UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',password = '"+user.getPassword() + "', email ='" +user.getEmail() + "', location ='"+user.getLocation()+ "WHERE id="+id);
-		
+				String query = "UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',salt = '"+user.getSalt() +"',password = '"+user.getPassword() + "', location ='"+user.getLocation()+ "' WHERE id="+id;
+				System.out.println(query);
+				st.executeUpdate(query);
+				
 				st.close();
 				con.close();
 			}
@@ -140,7 +144,7 @@ public class UserDAOImp implements UserDAO{
 		
 
 	@Override
-	public UserBean getUserdata(String id) {
+	public UserBean getUserdata(int id) {
 		Connection con;
 		Statement st;
 		ResultSet rs;
@@ -252,4 +256,89 @@ public class UserDAOImp implements UserDAO{
 		
 		return id;
 		}
+	
+	@Override
+	public List<UserBean> getAllUsers() {
+		Connection con;
+		Statement st;
+		ResultSet rs;
+		List<UserBean> users = new ArrayList<UserBean>();
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			}else {
+				st = con.createStatement();
+				rs =st.executeQuery("SELECT * FROM users");
+				
+				while(rs.next()) {
+					UserBean userAux = new UserBean();
+					userAux.setId(rs.getInt("id"));	
+					userAux.setName(rs.getString("name"));
+					userAux.setSurname(rs.getString("surname"));
+					userAux.setEmail(rs.getString("email"));
+					userAux.setLocation(rs.getString("location"));
+					userAux.setPassword(rs.getString("password"));
+					userAux.setSalt(rs.getString("salt"));
+					users.add(userAux);		
+				}
+				rs.close();
+				st.close();
+			}
+			con.close();
+		}catch(Exception e) {
+			
+		}
+		
+		return users;
+		}
+	
+	@Override
+	public boolean isAdmin(int id) {
+		Connection con;
+		Statement st;
+		ResultSet rs;
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			} else {
+				st = con.createStatement();
+				rs =st.executeQuery("SELECT id FROM users WHERE admin = 1");
+				while(rs.next()) {
+					if(id == rs.getInt("id")) {
+						return true;
+					}
+				}
+			}
+		} catch(Exception e) {
+			
+		}
+		return false;
+	}
+
+	@Override
+	public void deleteUser(int id) {
+		Connection con;
+		Statement st;
+		try {
+			con =ds.getConnection();
+			
+			if(con == null) {
+				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
+			}else {
+				st = con.createStatement();
+				st.executeUpdate("DELETE FROM users WHERE id = "+id);
+				
+				st.close();
+				con.close();
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

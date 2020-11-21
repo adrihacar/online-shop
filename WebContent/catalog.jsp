@@ -52,21 +52,19 @@
                   <button class="nav-link" type='submit'>Home </button>
                 </form>
                 </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
+                <li class="nav-item">
+                  <a class="nav-link" href="./addProduct.jsp">Add product</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="./user-config.jsp">My user</a>
                 </li>
-                <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
+                <li class="nav-item active">
+			 <a class="nav-link" href="./Catalog">Catalog</a>
             </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
+                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
               </div>
 			</form>
 			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
@@ -97,7 +95,15 @@
 
   <div class="album py-5 bg-light back-box">
     <div class="container back-box">
-     <% if(request.getAttribute("sold").equals("false")){ %>
+     <%
+     Object productsObject = request.getAttribute("products");
+     if(productsObject == null) {
+		request.setAttribute("errorMsg", "Not able to load the products!");	
+		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+		rd.forward(request, response);
+	 }
+	 List<ProductBean> products = (List<ProductBean>)productsObject;
+     if(request.getAttribute("sold").equals("false")){ %>
         <form action='/online_shop/Catalog' method='get'>
            <button type='submit' name="sold" value="true" class="btn btn-dark">Show sold</button>
         </form>
@@ -108,9 +114,7 @@
      <% } %>
      
       <div class="row">
-      <% Object productsObject = request.getAttribute("products");
-    	 List<ProductBean> products = (List<ProductBean>)productsObject;
-         for(int i = 0; i < products.size(); i++){ %>
+      <% for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
             <img class="bd-placeholder-img card-img-top" src="<% StringBuilder sb = new StringBuilder();
@@ -126,10 +130,12 @@
               <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
               <div class="d-flex justify-content-between align-items-center">
 			  <form action='/online_shop/editProduct' method='get'>
-                	<button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
+			  		<input type="hidden" id="idProduct" name="idProduct" value="<%=products.get(i).getId()%>">
+                	<button class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
 		      </form>
                 <form action='/online_shop/deleteProduct' method='post'>
-                    <button type='submit' name="idProduct" value="<%= products.get(i).getId() %>" type="button" class="close" aria-label="Close">
+                	<input type="hidden" id="idProduct" name="idProduct" value="<%=products.get(i).getId()%>">
+                    <button type='submit' type="button" class="close" aria-label="Close">
  			<span aria-hidden="true" style="color=red">Delete ×</span>
 	            </button>
 		    </form>

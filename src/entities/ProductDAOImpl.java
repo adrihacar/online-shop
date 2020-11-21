@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.ServletContextEvent;
 
 import entities.ProductBean;
 
@@ -18,6 +19,12 @@ public class ProductDAOImpl implements ProductDAO {
 		this.emf = Persistence.createEntityManagerFactory(unidadDePersistencia);
 	}
 
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+	  EntityManagerFactory emf = this.emf;
+	  emf.close();
+	}
+	
 	@Override
 	public void insert(ProductBean product) throws Exception {
 		EntityManager entityManager = emf.createEntityManager();

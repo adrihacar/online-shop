@@ -27,7 +27,7 @@ import entities.ProductDAOImpl;
  */
 @WebServlet("/addProduct")
 @MultipartConfig
-public class addProductServlet extends HttpServlet {
+public class AddProductServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ServletConfig config;
 	
@@ -44,7 +44,7 @@ public class addProductServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public addProductServlet() {
+    public AddProductServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -75,8 +75,14 @@ public class addProductServlet extends HttpServlet {
 		ProductBean product = new ProductBean();
 		
 		HttpSession session = request.getSession(true);
-        int seller = (int) session.getAttribute("user_id");
-        
+		Object sellerObject = session.getAttribute("user_id");
+		if(sellerObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		}
+		
+		int seller = (int) sellerObject;
 		product.setSeller(seller);
 		product.setName(productName);
 		product.setPrice(Double.parseDouble(price));

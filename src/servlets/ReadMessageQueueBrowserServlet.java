@@ -241,10 +241,10 @@ public class ReadMessageQueueBrowserServlet extends HttpServlet {
 					//Get the data from the other user participating in the chat, that is not the logged user
 					UserBean user;
 					if(chat.getBuyer() == loggedUserID) {
-						user = userDAO.getUserdata(chat.getSellerString());
+						user = userDAO.getUserdata(chat.getSeller()); //FIX MERGE, before it was getSellerString()
 						chatType = ChatElement.CHAT_TO_BUY;
 					}else {
-						user = userDAO.getUserdata(chat.getBuyerString());
+						user = userDAO.getUserdata(chat.getBuyer());  //FIX MERGE, before it was getBuyerString()
 						chatType = ChatElement.CHAT_TO_SELL;
 					}					
 

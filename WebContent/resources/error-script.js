@@ -1,5 +1,3 @@
-
-
 function displayError(){	
 
 	const error = document.querySelector(".error-desc");
@@ -17,4 +15,3 @@ function displayError(){
 
 
 }
-

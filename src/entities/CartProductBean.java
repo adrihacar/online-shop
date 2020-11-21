@@ -1,6 +1,6 @@
 package entities;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-
 
 @Entity
 @NamedQueries({
@@ -23,7 +21,7 @@ public class CartProductBean {
 	
 	// Attributes
 	@Id
-	@GeneratedValue (strategy = AUTO)
+	@GeneratedValue (strategy = IDENTITY)
 	private int id;
 	
 	@Column(name="cart")
@@ -80,10 +78,32 @@ public class CartProductBean {
 		this.quantity = quantity;
 	}
 	
-	
+	/**
+	 * Adds the specified quantum to this {@link CartProductBean} quantity.
+	 * 
+	 * @param quantum Quantity to be added to this.quantity value. Cannot be negative
+	 */
+	public void modifyQuantity(int quantum) {
+		this.setQuantity(this.getQuantity() + quantum);
 
+	}
 
-	
-	
+	/**
+	 * Compares this object to the specified object. The result is true if and only
+	 * if the argument is not null and is a {@link CartProductBean} object that
+	 * contains the same productId value as this object.
+	 * 
+	 * @Overrides:equals in class Object
+	 * @Returns:true if the objects are the same; false otherwise
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CartProductBean))
+			return false;
+		if (obj == this)
+			return true;
+		return (this.getCart() == ((CartProductBean) obj).getCart()
+				&& this.getProduct() == ((CartProductBean) obj).getProduct());
+	}
 
 }

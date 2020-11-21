@@ -13,7 +13,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Search - Online shop</title>
+    <title>Your Catalog - Online shop</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/cover/">
     <!-- Custom styles for this template -->
@@ -38,7 +38,7 @@
     </style>
 </head>
   <body>
-    <header>
+<header>
         <div class="container" >
           <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,54 +48,30 @@
             <div class="collapse navbar-collapse" id="navbarsExample09">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
-                <form action='/online_shop/dashboard' method='get'>
-                  <button class="nav-link" type='submit'>Home </button>
-                </form>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
-                </li>
+	                <form action='/online_shop/AdminProductsServlet' method='get'>
+	                  <button class="nav-link" type='submit'>Products</button>
+	                </form>
                 <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
+                    <form action='/online_shop/AdminUsersServlet' method='get'>
+                  	  <button class="nav-link" type='submit'>Users</button>
+                    </form>
                 </li>
-                <li class="nav-item">
-			 <a class="nav-link" href="./Catalog">Catalog</a>
-            </li>
-              </ul>
-              <form class="form-inline my-2 my-md-0">
-              <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
-              </div>
-			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
-                <div>
-                <label style="color: white" for="category"></label>
-                <select id="category" name="cattegoryProductSearch">
-                  <option value="-1">Any</option>
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
-                </select>
-            </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary nav-item">Search</button>
-              </form>
-              
+              </ul>             
             </div>
           </nav>
+        </div>
     </header>
-
 <main role="main" class="back-box">
 
   <section class="jumbotron text-center back-box" style="color: white;">
     <div class="container">
-      <h1>Searched Products</h1> 
+      <h1>All the Products</h1> 
     </div>
   </section>
 
   <div class="album py-5 bg-light back-box">
-    <div class="container back-box">     
+    <div class="container back-box">
+     
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
          if(productsObject == null) {
@@ -111,26 +87,22 @@
 						sb.append("data:image/png;base64,");
 						sb.append(StringUtils.newStringUtf8(Base64.encodeBase64(products.get(i).getImage(), false)));
 						out.print(sb.toString()); %>">
-			 <div class="card-body">
-            <% if(products.get(i).getStatus() == 1){ %>
+						 <div class="card-body">
+            <% if(products.get(i).getStatus()==1){ %>
             	<h4 style="color: red; text-align: end;">SOLD</h4>
             <% } %>
               <h4><%= products.get(i).getName() %></h4>
               <p class="card-text"><%= products.get(i).getDescription() %></p>
               <h5 style="text-align: end"><%= products.get(i).getPrice() %> €</h5>
               <div class="d-flex justify-content-between align-items-center">
-			  
- 			<% if(products.get(i).getStatus() == 0){ %>
-            	<div class="btn-group">
-                  <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
-                    </div>
-                    <input type="number" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
-                  </div>
-                </div>
-            <% } %>
-                
+			  <form action='/online_shop/editProduct' method='get'>
+                	<button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-warning" type="submit" id="button-addon1">Editar</button>
+		      </form>
+                <form action='/online_shop/deleteProduct' method='post'>
+                    <button type='submit' name="idProduct" value="<%= products.get(i).getId() %>" type="button" class="close" aria-label="Close">
+ 			<span aria-hidden="true" style="color=red">Delete ×</span>
+	            </button>
+		    </form>
                 </div>
               </div>
             </div>
