@@ -39,27 +39,7 @@
 </head>
   <body>
 <header>
-        <div class="container" >
-          <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarsExample09">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item ">
-	                <form action='/online_shop/AdminProductsServlet' method='get'>
-	                  <button class="nav-link" type='submit'>Products</button>
-	                </form>
-                <li class="nav-item">
-                    <form action='/online_shop/AdminUsersServlet' method='get'>
-                  	  <button class="nav-link" type='submit'>Users</button>
-                    </form>
-                </li>
-              </ul>             
-            </div>
-          </nav>
-        </div>
+       <%@ include file="headerAdmin.jsp" %>
     </header>
 <main role="main" class="back-box">
 

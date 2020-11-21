@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     import = "entities.UserBean"
+    import = "jdbc.UserDAOImp"
     %>
 <!doctype html>
 <html lang="es">
@@ -14,23 +15,35 @@
 
     <title>Online Shop | Edit User</title>
   </head>
-  <body>
+  <%
+  Object object = request.getAttribute("user");
+	if(object == null) {
+		request.setAttribute("errorMsg", "Not able to load the products!");	
+		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+		rd.forward(request, response);
+  }
+	UserBean user = (UserBean) object;
+	UserDAOImp userDAO = new UserDAOImp();
+  if(userDAO.isAdmin(user.getId())) {    
+  %>
+  <header>
+        <%@ include file="headerAdmin.jsp" %>
+    </header>
+    <% } else { %>
+    <header>
+        <%@ include file="header.jsp" %>
+    </header>
+    
+    <% 
+    }
+    %>
+  <body style="color: white;">
 	  
  	
 		<!-- Default form register -->
-	<form action='/online_shop/editUser' method='post' class='text-center border border-light container' style='width:650px; margin-top: 100px;'>
+	<form action='/online_shop/editUser' method='post' class='text-center container' style='width:650px; margin-top: 100px;'>
 	
 	    <p class='h4 mb-4'>Edit User</p>
-		<%
-		Object object = request.getAttribute("user");
-		if(object == null) {
-    		request.setAttribute("errorMsg", "Not able to load the products!");	
-    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
-    		rd.forward(request, response);
-        }
-		UserBean user = (UserBean) object;
-		
-		%>
 		
 		
 	    <!-- E-mail -->
@@ -70,7 +83,7 @@
 		
 	</form>
 	
-	<form  method='post' action="/online_shop/deleteUser"  class='text-center border border-light container' style='width:650px;'>
+	<form  method='post' action="/online_shop/deleteUser"  class='text-center container' style='width:650px;'>
 	<!-- Delete user button -->
 	    <button type="submit" class='btn btn-danger my-4 btn-block'>DELETE ACCOUNT</button>
 	</form>
