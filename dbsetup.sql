@@ -62,10 +62,10 @@ CREATE TABLE cartproducts (
 );
 
 INSERT INTO users (name, surname, email, location, password, salt) VALUES
-  ("John","Doe","email1@gmail.com","madrid","asdfaszd","asdf"),
-  ("Jane","Doe","email2@gmail.com","madrid","asdfaszd","asdf"),
-  ("Fulanito","Doe","email3@gmail.com","madrid","asdfaszd","asdf"),
-  ("Fulanita","Doe","email4gmail.com","madrid","asdfaszd","asdf");
+  ("John","Doe","email1@gmail.com","madrid","KxU2olalQaveCPDeDjLLM8f5+sHU0U7e843EQcwVWTM=","4qnk6xyd4dIP99UM51VxHA=="),
+  ("Jane","Doe","email2@gmail.com","madrid","AczcC97ldZyZc2++M5QAZmEs/IYz6V+Dd9vfNNomu7s=","YIhSw8VQYH+b5kFhI0cWrA=="),
+  ("Fulanito","Doe","email3@gmail.com","madrid","+SD+kLGrVrpaPt6Zo7oA+u/7sQjtOsYrZbWH5LhmrrI=","BoRDT5HE6q1X+FYDxtn4mg=="),
+  ("Fulanita","Doe","email4gmail.com","madrid","mvguFsrGzKhvq6f293p5yna2NHDraaeQOSV+bwEg4mY=","PkVbbGn/hXFXgWzGMelSsA==");
   
 INSERT INTO users (name, surname, email, location, password, salt,admin) VALUES
   ("admin", "admin", "admin@admin.com", "Spain", "8c5MAO8Krg+21sPX8EGnxQNVud8AdfXqd/mahTNVahI=", "zBdM3w/UMlpHWqQ3E5SL3g==",1);
