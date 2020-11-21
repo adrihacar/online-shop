@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PaymentGatewayProducerServlet extends HttpServlet {
 	
 	@Resource(mappedName = "PaymentGatewayFactory") //logic name
-    private ConnectionFactory tiwconnectionfactory;
+    private ConnectionFactory connectionfactory;
 
     @Resource(mappedName = "PaymentGateway") //logic name
     private Queue queue;
@@ -64,7 +64,7 @@ public class PaymentGatewayProducerServlet extends HttpServlet {
 		// Create a connection using the connectionFactory
         Connection oConn;
 		try {
-			oConn = tiwconnectionfactory.createConnection();
+			oConn = connectionfactory.createConnection();
 	        // Next create the session. Indicate that transaction will not be supported
 	        Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	        // Create producer
