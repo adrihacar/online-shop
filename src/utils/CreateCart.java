@@ -19,7 +19,6 @@ public class CreateCart {
 			// the following parameters are set up on checkout
 			cart.setAddress("");
 			cart.setDate(-1);
-			cart.setPaymethod(-1);
 			
 			// insert it into the database
 			try {

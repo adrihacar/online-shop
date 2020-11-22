@@ -56,8 +56,8 @@ public class PaymentGatewayProducerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		long cart = Long.parseLong(request.getParameter("cart"));
-		long paymethod = Long.parseLong(request.getParameter("paymethod"));
+		int cart = Integer.parseInt(request.getParameter("cart"));
+		String paymethod = request.getParameter("paymethod");
 		String address = request.getParameter("address");
 		long date = System.currentTimeMillis() / 1000L; // get payment date in unix time
 		
@@ -77,8 +77,8 @@ public class PaymentGatewayProducerServlet extends HttpServlet {
 	        txtMsg.setText("");
 
 	        //Set additional properties of the message
-	        txtMsg.setLongProperty("cart", cart);
-	        txtMsg.setLongProperty("paymethod", paymethod);
+	        txtMsg.setIntProperty("cart", cart);
+	        txtMsg.setStringProperty("paymethod", paymethod);
 	        txtMsg.setStringProperty("address", address);
 	        txtMsg.setLongProperty("date", date);
 
@@ -88,8 +88,7 @@ public class PaymentGatewayProducerServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		RequestDispatcher rd = request.getRequestDispatcher("/purchased.jsp");
-		rd.forward(request, response);
+		response.sendRedirect("/online_shop/consumepayment");
 	
 	}
 

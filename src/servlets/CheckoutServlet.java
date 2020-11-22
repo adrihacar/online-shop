@@ -56,7 +56,7 @@ public class CheckoutServlet extends HttpServlet {
 		CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
 		ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
 		
-		// TODO get user id
+
 		HttpSession session = request.getSession(true);
 		Object userObject = session.getAttribute("user_id");
 		if(userObject == null) {
@@ -67,7 +67,7 @@ public class CheckoutServlet extends HttpServlet {
 		int user = (int) userObject;
 		
 		// get cart of user
-		CartBean cart = cartDAO.findCartByUser(user); // TODO change this to the real user id
+		CartBean cart = cartDAO.findCartByUser(user);
 		
 		// get id of the products in the cart
 		List<CartProductBean> cartproducts = cartProductDAO.findProductsInCart(cart.getId()); //this can be sent to the jsp
@@ -93,7 +93,6 @@ public class CheckoutServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
