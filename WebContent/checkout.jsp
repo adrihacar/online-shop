@@ -140,21 +140,6 @@
         
 
         <h4 class="mb-3">Payment</h4>
-
-        <div class="d-block my-3">
-          <div class="custom-control custom-radio">
-            <input NAME="credit" id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-            <label class="custom-control-label" style="position:initial;" for="credit">Credit card</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input NAME="debit" id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
-            <label class="custom-control-label" style="position:initial;" for="debit">Debit card</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input NAME="payPal" id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-            <label class="custom-control-label" style="position:initial;" for="paypal">PayPal</label>
-          </div>
-        </div>
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="cc-name">Name on card</label>
