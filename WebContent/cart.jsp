@@ -66,7 +66,7 @@
 
 															for (int i = 0; i < userCurrentCart.size(); i++) {
 														%>
-														<li class="cart_item clearfix" style="margin-bottom: 25px;">
+														<li class="cart_item clearfix" style="margin-bottom: 6%;">
 															<div class="cart_item_image" style="display: inline-grid;">
 																<img class="bd-placeholder-img card-img-top"
 																	src="<%StringBuilder sb = new StringBuilder();

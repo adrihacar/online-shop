@@ -55,7 +55,7 @@
   </section>
 
   <div class="album py-5 bg-light back-box">
-    <div class="container back-box">
+    <div class="container back-box" style="max-width: 1000px;">
 
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
@@ -83,7 +83,7 @@
                     <form style="display: flex;" action='/online_shop/cart' method='post' id="form<%=products.get(i).getId()%>">
                       <input type="hidden" id="action" name="action" value="addToCart">
                       <input type="hidden" id="product" name="product" value="<%=products.get(i).getId()%>">
-                      <input style="width: 65%;" type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="" value="1">
+                      <input style="width: 35%;" type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="" value="1">
                       <div class="input-group-prepend">
                         <button type="submit" form="form<%=products.get(i).getId()%>" value="Submit" name="idProduct" class="btn btn-outline-secondary" type="button" id="button-addon1">Add to cart</button>
                       </div>

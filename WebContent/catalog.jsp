@@ -50,7 +50,7 @@
   </section>
 
   <div class="album py-5 bg-light back-box">
-    <div class="container back-box">
+    <div class="container back-box" style="max-width: 1000px;">
      <%
      Object productsObject = request.getAttribute("products");
      if(productsObject == null) {

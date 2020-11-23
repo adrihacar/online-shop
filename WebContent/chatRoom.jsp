@@ -25,9 +25,9 @@
 
 </head>
 <body onload="scrollToContent()">
-<header style="background: #8ab8dc">
+<header>
 		<%@ include file="header.jsp" %>
-    </header>
+</header>
 	<div class="container">
 		<h3 class=" text-center">Online-shop Chat room</h3>
 		<%
