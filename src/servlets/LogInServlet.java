@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import entities.UserBean;
 import jdbc.UserDAOImp;
-import utils.CreateCart;
 
 /**
  * Servlet implementation class LogInServlet

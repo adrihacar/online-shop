@@ -29,6 +29,12 @@
                 <li class="nav-item">
                   <a class="nav-link" href="./Catalog">My products</a>
             </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="./purchases">My purchases</a>
+            </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="./chatroom">My chats</a>
+            </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">

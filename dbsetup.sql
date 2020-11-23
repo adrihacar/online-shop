@@ -23,7 +23,8 @@ CREATE TABLE chats (
     lastMsgId VARCHAR(256) NOT NULL,
     
     FOREIGN KEY(buyer) REFERENCES users(id),
-    FOREIGN KEY(seller) REFERENCES users(id)
+    FOREIGN KEY(seller) REFERENCES users(id),
+    CONSTRAINT no_duplicated_chats UNIQUE (buyer, seller)
 );
 
 CREATE TABLE products (

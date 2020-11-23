@@ -106,25 +106,22 @@ public class CartBean {
 	public void setDate(long date) {
 		this.date = date;
 	}
+	
 	/**
 	 * Sets the cart information of the calling UserCart
 	 * 
 	 * @param cart {@link CartBean} with the information to be set in this UserCart
 	 * @throws Exception generated when trying to set the cart attributes
 	 */
+	/*
 	public void setCartInfo(CartBean cart) throws Exception {		
-		try {
-			this.user = cart.getUser();
-			this.setAddress(cart.getAddress());
-			this.setBought(cart.isBought());
-			this.setPaymethod(cart.getPaymethod());
-			this.setDate(cart.getDate());
-			
-	
-		} catch (Exception e) {
-			throw e;
-		}
+		this.user = cart.getUser();
+		this.setAddress(cart.getAddress());
+		this.setBought(cart.isBought());
+		this.setPaymethod(cart.getPaymethod());
+		this.setDate(cart.getDate());				
 		
 	}
+	*/
 
 }

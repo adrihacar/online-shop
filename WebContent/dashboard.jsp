@@ -19,7 +19,9 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link href="./resources/album.css" rel="stylesheet">
-
+	<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="./resources/index-dashboard.js"></script>
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -89,6 +91,11 @@
                   </div>
                 </div>
               </div>
+              <form id="formChat<%=products.get(i).getSeller()%>" action="/online_shop/chatroom" method="post">
+              	<input type="hidden" id="sendTo" name="sendTo" value="<%=products.get(i).getSeller()%>">
+              	<!--  <button style="width: 100%;" class="btn btn-outline-secondary openChat" value="<%=products.get(i).getSeller()%>">Chat with the seller</button>-->
+              	<button type="submit" form="formChat<%=products.get(i).getSeller()%>" class="btn btn-outline-secondary openChat" >Chat with the seller</button>
+              </form>              
             </div>
           </div>
         </div>

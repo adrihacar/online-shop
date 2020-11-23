@@ -230,8 +230,8 @@ ul {
 }
 
 .mpopup-head {
-  padding: 2px 16px;
-  background-color: #ffe658;
+  padding: 2px 16px;  
+  background: #8ab8dc !important;
   color: #000000;
   text-align: center;
 }
