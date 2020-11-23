@@ -6,7 +6,9 @@
     import = "java.util.List"
     import = "java.util.ArrayList"
     import = "org.apache.commons.codec.binary.StringUtils" 
-    import = "org.apache.commons.codec.binary.Base64"%>
+    import = "org.apache.commons.codec.binary.Base64"
+    import = "java.lang.*"
+    %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -77,8 +79,8 @@
             <h6 class="my-0"><%= products.get(i).getName() %></h6>
             <small class="text-muted">x<%= cartProducts.get(i).getQuantity() %></small>
           </div>
-          <span class="text-muted"><%= cartProducts.get(i).getQuantity() * products.get(i).getPrice()%>€</span>
-          <% totalPrice = totalPrice + cartProducts.get(i).getQuantity() * products.get(i).getPrice(); %>
+          <span class="text-muted"><%=  Math.round(cartProducts.get(i).getQuantity() * products.get(i).getPrice()*100.0)/100.0 %>€</span>
+          <% totalPrice = totalPrice + Math.round(cartProducts.get(i).getQuantity() * products.get(i).getPrice()*100.0)/100.0; %>
         </li>
         <%} %>      
         <li class="list-group-item d-flex justify-content-between">
