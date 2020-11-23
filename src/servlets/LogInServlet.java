@@ -58,7 +58,7 @@ public class LogInServlet extends HttpServlet {
 		        session.setAttribute("user_id",id);
 		        
 		        if(userDAOImp.isAdmin(id)) {
-		        	response.sendRedirect("/online_shop/AdminProductsServlet");
+		        	response.sendRedirect("/online_shop/login.jsp?status=error");
 		        } else {
 		        	response.sendRedirect("/online_shop/dashboard");
 		        }
