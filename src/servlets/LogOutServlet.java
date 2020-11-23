@@ -38,6 +38,7 @@ public class LogOutServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
 		session.setAttribute("user_id", null);
+		session.setAttribute("userCart", null);
 		response.sendRedirect("./home.jsp");
 	}
 
