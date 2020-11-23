@@ -9,6 +9,9 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+*/.classpath
+#For windows just in case...
+*\.classpath
 
 build/*
 

@@ -19,7 +19,9 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link href="./resources/album.css" rel="stylesheet">
-
+	<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="./resources/index-dashboard.js"></script>
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -38,54 +40,9 @@
     </style>
 </head>
   <body>
-<header>
-        <div class="container" >
-          <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarsExample09">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item ">
-                <form action='/online_shop/dashboard' method='get'>
-                  <button class="nav-link" type='submit'>Home </button>
-                </form>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
-                </li>
-                <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
-            </li>
-              </ul>
-              <form class="form-inline my-2 my-md-0">
-              <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
-              </div>
-			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
-                <div>
-                <label style="color: white" for="category"></label>
-                <select id="category" name="cattegoryProductSearch">
-                  <option value="-1">Any</option>
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
-                </select>
-            </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary nav-item">Search</button>
-              </form>
-              
-            </div>
-          </nav>
+  
+	<header style="background: #8ab8dc">
+		<%@ include file="header.jsp" %>
     </header>
 
 <main role="main" class="back-box">
@@ -98,10 +55,15 @@
   </section>
 
   <div class="album py-5 bg-light back-box">
-    <div class="container back-box">
+    <div class="container back-box" style="max-width: 1000px;">
 
       <div class="row">
       <% Object productsObject = request.getAttribute("products");
+    		  if(productsObject == null) {
+    				request.setAttribute("errorMsg", "Not able to load the products!");	
+    				RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    				rd.forward(request, response);
+    			 }
     	 List<ProductBean> products = (List<ProductBean>)productsObject;
          for(int i = 0; i < products.size(); i++){ %>
         <div class="col-md-4">
@@ -117,13 +79,23 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <button name="idProduct" value="<%= products.get(i).getId() %>" class="btn btn-outline-secondary" type="button" id="button-addon1">Añadir al carro</button>
-                    </div>
-                    <input type="number" min="1" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+                    <form style="display: flex;" action='/online_shop/cart' method='post' id="form<%=products.get(i).getId()%>">
+                      <input type="hidden" id="action" name="action" value="addToCart">
+                      <input type="hidden" id="product" name="product" value="<%=products.get(i).getId()%>">
+                      <input style="width: 35%;" type="number" id="quantity" name="quantity" min="1" class="form-control" placeholder="" value="1">
+                      <div class="input-group-prepend">
+                        <button type="submit" form="form<%=products.get(i).getId()%>" value="Submit" name="idProduct" class="btn btn-outline-secondary" type="button" id="button-addon1">Add to cart</button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
+              <form id="formChat<%=products.get(i).getSeller()%>" action="/online_shop/chatroom" method="post">
+              	<input type="hidden" id="sendTo" name="sendTo" value="<%=products.get(i).getSeller()%>">
+              	<!--  <button style="width: 100%;" class="btn btn-outline-secondary openChat" value="<%=products.get(i).getSeller()%>">Chat with the seller</button>-->
+              	<button type="submit" form="formChat<%=products.get(i).getSeller()%>" class="btn btn-outline-secondary openChat" >Chat with the seller</button>
+              </form>              
             </div>
           </div>
         </div>

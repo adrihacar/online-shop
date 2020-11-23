@@ -5,16 +5,19 @@ import java.io.IOException;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
 
 import entities.ProductBean;
 import entities.ProductDAOImpl;
+import jdbc.UserDAOImp;
 
 /**
  * Servlet implementation class DeleteProductSrvlet
@@ -25,6 +28,9 @@ public class DeleteProductSrvlet extends HttpServlet {
 	private ServletConfig config;
 	
 	ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
+	
+	UserDAOImp userDAO = new UserDAOImp();
+
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -61,7 +67,20 @@ public class DeleteProductSrvlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		response.sendRedirect("/online_shop/Catalog");
+		HttpSession session = request.getSession(true);
+		Object sellerObject = session.getAttribute("user_id");
+		if(sellerObject == null) {
+			request.setAttribute("errorMsg", "There is no user in the session!!");			
+			RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+			rd.forward(request, response);
+		}
+		int seller = (int) sellerObject;
+
+		if(userDAO.isAdmin(seller)) {
+			response.sendRedirect("/online_shop/AdminProductsServlet");
+		} else {
+			response.sendRedirect("/online_shop/Catalog");
+		}
 		
 	}
 

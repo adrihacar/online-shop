@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     
-    import = "entities.ProductBean"%>
+    import = "entities.ProductBean"
+    import = "jdbc.UserDAOImp"
+    %>
     
 <!doctype html>
 <html lang="es">
@@ -13,60 +15,30 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Online Shop | Register</title>
+    <title>Online Shop | Edit Product</title>
   </head>
-  <body style="background: #6d2eff;">
+  <body style="background: #8ab8dc;">
+  <%
+  Object userObject = session.getAttribute("user_id");
+  if(userObject == null) {
+		request.setAttribute("errorMsg", "Not able to load the products!");	
+		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+		rd.forward(request, response);
+  }
+  int user = ((Integer) userObject).intValue();
+  UserDAOImp userDAO = new UserDAOImp();
+  if(userDAO.isAdmin(user)) {    
+  %>
+  <header>
+        <%@ include file="headerAdmin.jsp" %>
+    </header>
+    <% } else { %>
     <header>
-        <div class="container" >
-          <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarsExample09">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item ">
-                <form action='/online_shop/dashboard' method='get'>
-                  <button class="nav-link" type='submit'>Home </button>
-                </form>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
-                </li>
-                <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
-            </li>
-              </ul>
-              <form class="form-inline my-2 my-md-0">
-              <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
-              </div>
-			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
-                <div>
-                <label style="color: white" for="category"></label>
-                <select id="category" name="cattegoryProductSearch">
-                  <option value="-1">Any</option>
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
-                </select>
-            </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary nav-item">Search</button>
-              </form>
-              
-            </div>
-          </nav>
+        <%@ include file="header.jsp" %>
     </header>
     
     <% 
+    }
     Object object = request.getAttribute("product");
     ProductBean product = (ProductBean) object;
     %>
@@ -74,7 +46,7 @@
 		<!-- Default form register -->
 	<form action='/online_shop/editProduct' enctype="multipart/form-data" method='post' class='text-center border border-light p-5 container' style='width:650px; margin-top: 50px;'>
 	
-	    <p class='h4 mb-4' style="color: white;">Add a Product</p>
+	    <p class='h4 mb-4' style="color: white;">Edit your Product</p>
 	
 	    <div class='form-row mb-4'>
 	        <div class='col'>
@@ -85,10 +57,10 @@
             <!-- Cattegory -->
                 <label style="color: white;" for="cattegory">Cattegory:</label>
                 <select id="cattegory" name="cattegoryProduct">
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
+                  <option <% if(product.getCategory()==0){%>selected="selected"<%}%>value="0">Home</option>
+                  <option <% if(product.getCategory()==1){%>selected="selected"<%}%>value="1">Toys</option>
+                  <option <% if(product.getCategory()==2){%>selected="selected"<%}%>value="2">Games</option>
+                  <option <% if(product.getCategory()==3){%>selected="selected"<%}%>value="3">Clothes</option>
                 </select>
             </div>
 	    </div>

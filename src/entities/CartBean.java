@@ -1,6 +1,7 @@
 package entities;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -32,7 +32,7 @@ public class CartBean {
 	
 	// Attributes
 	@Id
-	@GeneratedValue (strategy = AUTO)
+	@GeneratedValue (strategy = IDENTITY)
 	private int id;
 	
 	@Column(name="user")
@@ -64,7 +64,7 @@ public class CartBean {
 	
 	//Getters and setters
 	public int getId() {
-		return user;
+		return id;
 	}
 	
 	public int getUser() {
@@ -103,9 +103,25 @@ public class CartBean {
 		return date;
 	}
 
-	public void setDate(int date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
-
+	
+	/**
+	 * Sets the cart information of the calling UserCart
+	 * 
+	 * @param cart {@link CartBean} with the information to be set in this UserCart
+	 * @throws Exception generated when trying to set the cart attributes
+	 */
+	/*
+	public void setCartInfo(CartBean cart) throws Exception {		
+		this.user = cart.getUser();
+		this.setAddress(cart.getAddress());
+		this.setBought(cart.isBought());
+		this.setPaymethod(cart.getPaymethod());
+		this.setDate(cart.getDate());				
+		
+	}
+	*/
 
 }

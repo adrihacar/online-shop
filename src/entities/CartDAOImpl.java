@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.transaction.UserTransaction;
+import javax.servlet.ServletContextEvent;
 
 public class CartDAOImpl implements CartDAO{
 
@@ -16,7 +16,12 @@ public class CartDAOImpl implements CartDAO{
 	{
 		this.emf = Persistence.createEntityManagerFactory(unidadDePersistencia);
 	}
-
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+	  EntityManagerFactory emf = this.emf;
+	  emf.close();
+	}
 	
 	@Override
 	public void insert(CartBean cart) throws Exception {
@@ -41,6 +46,7 @@ public class CartDAOImpl implements CartDAO{
 		EntityManager entityManager = emf.createEntityManager();
 		Query cartquery = entityManager.createNamedQuery("findCartByUser").setParameter("user",user);
 		CartBean result = (CartBean) cartquery.getSingleResult();
+		entityManager.close();
 		return result;
 	}
 
@@ -49,6 +55,7 @@ public class CartDAOImpl implements CartDAO{
 		EntityManager entityManager = emf.createEntityManager();
 		Query cartsquery = entityManager.createNamedQuery("findBoughtCartsByUser").setParameter("user",user);
 		List<CartBean> results = cartsquery.getResultList();
+		entityManager.close();
 		return results;
 	}
 
@@ -56,6 +63,7 @@ public class CartDAOImpl implements CartDAO{
 	public CartBean findByID(int id) {
 		EntityManager entityManager = emf.createEntityManager();
 		CartBean cart = entityManager.find(CartBean.class, id);
+		entityManager.close();
 		return cart;
 	}
 

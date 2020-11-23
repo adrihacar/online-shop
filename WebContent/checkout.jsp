@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    
+    import = "entities.ProductBean"
+    import = "entities.CartProductBean"
+    import = "java.util.List"
+    import = "java.util.ArrayList"
+    import = "org.apache.commons.codec.binary.StringUtils" 
+    import = "org.apache.commons.codec.binary.Base64"
+    import = "java.lang.*"
+    %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -32,56 +41,10 @@
 </head>
 <body>
  <header>
-        <div class="container" >
-          <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarsExample09">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item ">
-                <form action='/online_shop/dashboard' method='get'>
-                  <button class="nav-link" type='submit'>Home </button>
-                </form>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link" href="./addProduct.jsp">Add product<span class="sr-only">(current)</span> </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./user-config.jsp">My user</a>
-                </li>
-                <li class="nav-item">
-			<form action='/online_shop/Catalog' method='get'>
-                <button class="nav-link" type='submit'>Catalog</button>
-			</form>
-            </li>
-              </ul>
-              <form class="form-inline my-2 my-md-0">
-              <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./user-config.jsp">My cart</a>
-              </div>
-			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
-                <div>
-                <label style="color: white" for="category"></label>
-                <select id="category" name="cattegoryProductSearch">
-                  <option value="-1">Any</option>
-                  <option value="0">Home</option>
-                  <option value="1">Toys</option>
-                  <option value="2">Games</option>
-                  <option value="3">Clothes</option>
-                </select>
-            </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary nav-item">Search</button>
-              </form>
-              
-            </div>
-          </nav>
+        <%@ include file="header.jsp" %>
     </header>
 
-  <body style="background: #6d2eff; color: azure;">
+  <body style="background: #8ab8dc; color: azure;">
     <div class="container">
   <div class="py-5 text-center">
     <h2>Checkout</h2>
@@ -94,35 +57,41 @@
         <span style="color: yellow;">Your cart</span>
       </h4>
       <ul class="list-group mb-3">
+        <% Object productsObject = request.getAttribute("products");
+        if(productsObject == null) {
+    		request.setAttribute("errorMsg", "Not able to load the products!");	
+    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    		rd.forward(request, response);
+        }
+			List<ProductBean> products = (List<ProductBean>)productsObject;
+			
+			Object cartProductsObject = request.getAttribute("cartproducts");
+			if(cartProductsObject == null) {
+    		request.setAttribute("errorMsg", "Not able to load the carts products!");	
+    		RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+    		rd.forward(request, response);
+        }
+		    List<CartProductBean> cartProducts = (List<CartProductBean>)cartProductsObject;
+   	 	double totalPrice = 0;
+        for(int i = 0; i < products.size(); i++){ %>
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
-            <h6 class="my-0">Product name</h6>
-            <small class="text-muted">Brief description</small>
+            <h6 class="my-0"><%= products.get(i).getName() %></h6>
+            <small class="text-muted">x<%= cartProducts.get(i).getQuantity() %></small>
           </div>
-          <span class="text-muted">$12</span>
+          <span class="text-muted"><%=  Math.round(cartProducts.get(i).getQuantity() * products.get(i).getPrice()*100.0)/100.0 %>€</span>
+          <% totalPrice = totalPrice + Math.round(cartProducts.get(i).getQuantity() * products.get(i).getPrice()*100.0)/100.0; %>
         </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">Second product</h6>
-            <small class="text-muted">Brief description</small>
-          </div>
-          <span class="text-muted">$8</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">Third item</h6>
-            <small class="text-muted">Brief description</small>
-          </div>
-          <span class="text-muted">$5</span>
-        </li>
-        
+        <%} %>      
         <li class="list-group-item d-flex justify-content-between">
-          <span>Total (USD)</span>
-          <strong>$20</strong>
+          <span>Total (€)</span>
+          <strong><%= totalPrice %>€</strong>
         </li>
       </ul>
 
-   <form METHOD="POST" ACTION="checkout.jsp">
+   <form METHOD="POST" ACTION="/online_shop/payments">
+   
+   <input type="hidden" id="cart" name="cart" value="<%=request.getAttribute("cart").toString()%>">
     </div>
     <div class="col-md-8 order-md-1">
       <h3 class="mb-3">User Information</h3>
@@ -173,21 +142,6 @@
         
 
         <h4 class="mb-3">Payment</h4>
-
-        <div class="d-block my-3">
-          <div class="custom-control custom-radio">
-            <input NAME="credit" id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-            <label class="custom-control-label" style="position:initial;" for="credit">Credit card</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input NAME="debit" id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
-            <label class="custom-control-label" style="position:initial;" for="debit">Debit card</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input NAME="payPal" id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-            <label class="custom-control-label" style="position:initial;" for="paypal">PayPal</label>
-          </div>
-        </div>
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="cc-name">Name on card</label>
@@ -199,7 +153,7 @@
           </div>
           <div class="col-md-6 mb-3">
             <label for="cc-number">Credit card number</label>
-            <input NAME="numberCard" type="text" class="form-control" id="cc-number" placeholder="" required>
+            <input NAME="paymethod" type="text" class="form-control" id="paymethod" placeholder="" required>
             <div class="invalid-feedback">
               Credit card number is required
             </div>

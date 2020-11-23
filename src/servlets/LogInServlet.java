@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import entities.UserBean;
 import jdbc.UserDAOImp;
-import utils.CreateCart;
 
 /**
  * Servlet implementation class LogInServlet
@@ -58,12 +57,11 @@ public class LogInServlet extends HttpServlet {
 				HttpSession session = request.getSession(true);
 		        session.setAttribute("user_id",id);
 		        
-		        //create empty cart
-		        CreateCart createCart = new CreateCart();
-		        createCart.createCart(id);
-		        
-		        response.sendRedirect("/online_shop/dashboard");
-				
+		        if(userDAOImp.isAdmin(id)) {
+		        	response.sendRedirect("/online_shop/login.jsp?status=error");
+		        } else {
+		        	response.sendRedirect("/online_shop/dashboard");
+		        }
 			}else {
 				response.sendRedirect("/online_shop/login.jsp?status=error");
 			}
