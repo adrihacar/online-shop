@@ -59,7 +59,7 @@ public class PaymentGatewayProducerServlet extends HttpServlet {
 		int cart = Integer.parseInt(request.getParameter("cart"));
 		String paymethod = request.getParameter("paymethod");
 		String address = request.getParameter("address");
-		long date = System.currentTimeMillis() / 1000L; // get payment date in unix time
+		long date = System.currentTimeMillis(); // get payment date in unix time
 		
 		// Create a connection using the connectionFactory
         Connection oConn;
