@@ -1,8 +1,10 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.util.ArrayList"
-	import="entities.ChatMessage" import="entities.ChatBean"
-	import="entities.UserChat" import="java.util.List"
+	import="entities.ChatMessage"
+	import="entities.ChatBean"
+	import="entities.UserChat"
+	import="java.util.List"
 	import="utils.ChatList"%>
 
 <!DOCTYPE html>

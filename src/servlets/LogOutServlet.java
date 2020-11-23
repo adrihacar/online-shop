@@ -27,7 +27,7 @@ public class LogOutServlet extends HttpServlet {
     }
     
     public void init(ServletConfig config) throws ServletException {
-    	System.out.println("entro en init logout");
+
 	}
    
     
@@ -38,7 +38,6 @@ public class LogOutServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
 		session.setAttribute("user_id", null);
-		System.out.println("entro en logout");
 		response.sendRedirect("./home.jsp");
 	}
 

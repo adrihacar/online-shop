@@ -130,7 +130,6 @@ public class UserDAOImp implements UserDAO{
 			}else {
 				st = con.createStatement();
 				String query = "UPDATE users SET name ='" + user.getName() + "', surname ='" + user.getSurname() +"',salt = '"+user.getSalt() +"',password = '"+user.getPassword() + "', location ='"+user.getLocation()+ "' WHERE id="+id;
-				System.out.println(query);
 				st.executeUpdate(query);
 				
 				st.close();
@@ -208,7 +207,6 @@ public class UserDAOImp implements UserDAO{
 			if(con == null) {
 				System.out.println("---->UNABLE TO CONNECT TO SERVER:");
 			}else {
-				System.out.println("entro en else, email: "+email);
 				//check if there is a row with that value in the database
 				st = con.createStatement();
 				rs =st.executeQuery("SELECT salt FROM users WHERE email='"+email+"'");
