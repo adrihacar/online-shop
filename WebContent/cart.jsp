@@ -21,7 +21,7 @@
 <link href="./resources/cart.css" rel="stylesheet">
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script type="text/javascript" src="./resources/index.js"></script>
+<script type="text/javascript" src="./resources/index-cart.js"></script>
 </head>
 <body style="background: #8ab8dc;">
 <header>
@@ -66,13 +66,17 @@
 
 															for (int i = 0; i < userCurrentCart.size(); i++) {
 														%>
-														<li class="cart_item clearfix">
-															<div class="cart_item_image">
+														<li class="cart_item clearfix" style="margin-bottom: 6%;">
+															<div class="cart_item_image" style="display: inline-grid;">
 																<img class="bd-placeholder-img card-img-top"
 																	src="<%StringBuilder sb = new StringBuilder();
 				sb.append("data:image/png;base64,");
 				sb.append(StringUtils.newStringUtf8(Base64.encodeBase64(userCurrentCart.getProductImage(i), false)));
 				out.print(sb.toString());%>">
+				<form id="form<%=userCurrentCart.getProductSeller(i)%>" action="/online_shop/chatroom" method="post" style="margin-top: 7px;">
+              	<input type="hidden" id="sendTo" name="sendTo" value="<%=userCurrentCart.getProductSeller(i)%>">              	
+              	<button type="submit" form="form<%=userCurrentCart.getProductSeller(i)%>" class="btn btn-outline-secondary openChat" >Chat with the seller</button>
+              </form>				
 															</div>
 															<div
 																class="cart_item_info d-flex flex-md-row flex-column justify-content-between">

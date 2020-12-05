@@ -19,7 +19,12 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
    <link href="./resources/bootstrap.min.css" rel="stylesheet">
    <link href="./resources/cart.css" rel="stylesheet">
-
+   <style type="text/css">
+   		.empty_cart {
+   			font-size: x-large;
+   		}
+   
+   </style>
 </head>
 <body style="background: #8ab8dc;">
 <header>
@@ -39,9 +44,8 @@
                 		   RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
                 		   rd.forward(request, response);
                         }
-                    	List<UserCart> purchases;
-                    	if(purchasesObj != null){
-                    		purchases = (ArrayList<UserCart>) purchasesObj;
+                    	List<UserCart> purchases = (ArrayList<UserCart>) purchasesObj;
+                    	if(!purchases.isEmpty()){                    		
                     		
                     		for(int i = 0; i < purchases.size(); i++){ 
                         		UserCart cart = purchases.get(i);%>                    		
@@ -83,11 +87,15 @@
                                         </div>
                                     </div>
                                 </li>
-                                <%} %>
+                                <%} //End of inner loop%>
                             </ul>                    		                    		
                         	<% 	
-                        	}
-                    	}%>
+                        	}//End of outter loop
+                    	}else {%>
+                    		<p class="empty_cart">You have not purchased any item yet.</p>
+                    	    <p class="empty_cart" >Checkout the feed to find the perfect product for you</p></div>
+                    		
+                    	<%}%>
                     	
 
                     </div>                    

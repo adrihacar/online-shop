@@ -32,25 +32,21 @@
 			document.querySelector("#popup_alert").style.display = "none";
 			productRef = -1;
 		});
-
+		/*
+		$('.openChat').click(function(){
+			let userRef = this.getAttribute("value");
+			
+			$.post("chatroom", 
+			{
+				sendTo: userRef
+			},
+			function(result){
+				console.log("chat created successfully");				
+				//location.assign("/online_shop/chatroom");
+			});
+		
+		});
+		*/	
 
 });
 
-
-function displayError(){	
-
-	const error = document.querySelector(".error-desc");
-	let i = 0, data = "", text = error.getAttribute("data-text");
-
-	let typing = setInterval(() => {
-	  if(i == text.length){
-	    clearInterval(typing);
-	  }else{
-	    data += text[i] ;
-	    document.querySelector(".error-desc").setAttribute("data-text", data);
-	    i++;	    
-	  }
-	}, 50);	
-
-
-}

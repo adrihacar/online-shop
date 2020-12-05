@@ -7,7 +7,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Error page</title>
-<script src="resources/index.js"></script>
+<script src="resources/error-script.js"></script>
 <link rel="stylesheet" href="resources/error-style.css"></link>
 </head>
 <body onload="displayError()">
@@ -16,8 +16,13 @@
 int errorCode = response.getStatus();
 Object errorMsgObj = request.getAttribute("errorMsg");
 if(errorMsgObj == null) {
+	String error = request.getParameter("error");
+	if(error!=null && error.equalsIgnoreCase("404")){
+		request.setAttribute("errorMsg", "Page not found");	
+	} else {
 	   request.setAttribute("errorMsg", "Did you tried to access the error page directly? Here it is! ;)");	
-	   RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
+	}
+	RequestDispatcher rd = request.getRequestDispatcher("/errorPage.jsp");
 	   rd.forward(request, response);
  }
 String errorMsg = (String) request.getAttribute("errorMsg");

@@ -1,13 +1,15 @@
 
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="java.util.ArrayList"
-	import="entities.ChatMessage" import="entities.ChatBean"
-	import="entities.ChatElement" import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" import="java.util.ArrayList"
+	import="entities.ChatMessage"
+	import="entities.ChatBean"
+	import="entities.UserChat"
+	import="java.util.List"
+	import="utils.ChatList"%>
 
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport"
@@ -15,22 +17,45 @@
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="./resources/chat.css">
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="resources/index-chatroom.js"></script>
 
 <title>chat room</title>
 
 </head>
 <body onload="scrollToContent()">
+<header>
+		<%@ include file="header.jsp" %>
+</header>
 	<div class="container">
 		<h3 class=" text-center">Online-shop Chat room</h3>
-		<div class="messaging">
-			<div class="inbox_msg">
+		<%
+				
+				
+				ChatList<UserChat> userChats = null;
+				Object oList = null; 
+				
+				oList = session.getAttribute("chats");
+				if(oList == null) {
+					throw new Exception("Error retrieving the chats");	
+				}
+				userChats = (ChatList<UserChat>) oList;
+																			
+				if (userChats.isEmpty()) {%>						
+					<div><p style="margin: 25px; padding: 20px;background: aliceblue;font-size: xx-large;">Oh! You have no chats right now. May be a good occasion to read a book :)</p></div>
+					
+				<% }else{%>
+					
+					
+							<div class="messaging">			
+			<div class="inbox_msg">				
 				<div class="inbox_people">
 					<div class="headind_srch">
 						<div class="recent_heading">
 							<h4>Recent</h4>
 						</div>
-						<div class="srch_bar">
+						<div class="srch_bar" style="display: none;">
 							<div class="stylish-input-group">
 								<input type="text" class="search-bar" placeholder="Search">
 								<span class="input-group-addon">
@@ -43,84 +68,61 @@
 					</div>
 					<%-- For each chat create a new div element to print the chat data --%>
 					<div id="inbox_chat" class="inbox_chat">
-					<%						
-						List<ChatElement> chatList;
-						Object oList = session.getAttribute("chatList");
-						if (oList == null) {
-							out.println(
-									"<div><p>Oh no! Something went wrong when we tried to retrieve your messages. Please reload the page</p></div>");
-						} else {
-							chatList = ((List<ChatElement>) oList);
-							if (chatList.isEmpty()) {
-								out.println(
-										"<div><p>Oh! You have no chats right now. A good ocasion to read a book :)</p></div>");
-							} else {
-								for (int i = 0; i < chatList.size(); i++) {
-									String cssClasses = "";
-									String chatName = "";
-									long chatRef = 0L;
-									
-									ChatElement chat = chatList.get(i);
-									chatRef = chat.getChatID();
+					
+					<%
+														
+											for (int i = 0; i < userChats.size(); i++) {												
+												
+												UserChat chat = userChats.get(i);												
 
-									//Only the first chat of the list has the CSS class 'active_chat'
-									if (i == 0) cssClasses += " active_chat ";
-									
-									//The name of the chat is set to the full name of the recipient user
-									chatName = chat.getRecipientUser();
-									
-									//Special CSS classes assigned based on the type of chat
-									if (chat.getChatType().equals(ChatElement.CHAT_TO_BUY)) {
-										cssClasses += " buyer_chat ";
-									} else {
-										cssClasses += " seller_chat ";
-									}
-									out.println("<div chat-ref=\"" + chatRef + "\" class=\"chat_list" + cssClasses
-											+ "\" onclick=\"swapActiveChat(this)\"><div class=\"chat_people\"><div class=\"chat_img\"> <img src=\"https://bootdey.com/img/Content/avatar/avatar2.png\" alt=\"sunil\"></div><div class=\"chat_ib\"><h5>"
-											+ chatName + "<span class=\"chat_date\">" + chat.getLastMsgDateToString(request.getLocale())
-											+ "</span></h5><p>" + chat.getLastMsgText() + "</p></div></div></div>");
-								}
-							}
-						}
-					%>
-
+												//Only the first chat of the list has the CSS class 'active_chat'
+												String isActiveChat = (i == 0)? " active_chat ": "";
+												%>
+												
+												<div chat-ref="<%= chat.getChatId() %>" class="chat_list <%=chat.getChatType() + " " + isActiveChat%> onclick="swapActiveChat(this)>
+												<div class="chat_people">												
+												<div class="chat_ib">
+													<h5><%= chat.getRecipientUserName() %> 
+														<span class="chat_date"><%=chat.getLastMsgDateToString(request.getLocale())%></span>
+													</h5>
+													<p><%= chat.getLastMsgText()%> </p>
+												</div> 														
+												</div>
+												</div>
+											<% }%>
 					</div>
 				</div>
 				<div class="mesgs">
 					<div id="msg_history" class="msg_history"
 						onload="scrollToContent()">						
 
-						<%
- 			List<String> msgHistory = null;
- 			Object msgList = request.getAttribute("msgList"); 			
- 			if(msgList == null){
- 				out.println("<div><p>Oh no! Something went wrong when we tried to retrieve your messages. Please reload the page</p></div>");
- 			}else{
- 				msgHistory = (List<String>)msgList;
- 				if(msgHistory.isEmpty()){
- 					out.println("<div><p>Oh! You have no chats right now. A good ocasion to read a book maybe :)</p></div>");
- 				}else{
- 					for(String chatMsg : msgHistory){
- 						out.println(chatMsg);
- 					}
- 				}
- 			}
-     							%>
+					<%
+ 					if(userChats.getActiveChat().getMessages().isEmpty()){%>
+ 	 					<div><p style="text-align: center;">Oh! You have not chat with this user before</p></div>
+ 	 				<% }else{
+ 	 					
+ 	 					out.println(userChats.getActiveChat().printMsgHistoryHtml());
+ 	 				}%>
 					</div>					
 					<div class="type_msg">
-						<div class="input_msg_write">
-							<form method="POST" action="online_shop/SendMessage">
+						<div class="input_msg_write">												
+							<form id="sendMsgForm" method="POST" action="/online_shop/SendMessage">
 								<input type="text" class="write_msg"
-									placeholder="Type a message" name="message" />
-								<button class="msg_send_btn" type="submit">
+									placeholder="Type a message" name="message" />									
+									<input type="hidden" id="i_openedChat" name="chatId" value="<%= userChats.getActiveChat().getChatId()%>">
+								<button class="msg_send_btn" type="submit" form="sendMsgForm">
 									<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 								</button>
 							</form>
 						</div>
-					</div>
+					</div>														
 				</div>
 			</div>
-		</div>
+		</div>														
+				<% 
+				}								
+				%>
+
 	</div>
 
 

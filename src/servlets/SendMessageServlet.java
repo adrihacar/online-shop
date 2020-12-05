@@ -12,6 +12,9 @@ import javax.servlet.http.HttpSession;
 
 import entities.ChatBean;
 import entities.ChatDAOImpl;
+import entities.UserChat;
+import utils.ChatList;
+
 import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -26,14 +29,12 @@ import javax.jms.TextMessage;
  * Servlet implementation class SendMessageQueueServlet
  */
 @WebServlet(urlPatterns = {"/SendMessage"})
-public class SendMessageQueueServlet extends HttpServlet {
+public class SendMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CHATROOM_PAGE = "/chatroom";
 	private static final String ERROR_JSP = "/errorPage.jsp";
 	private static final String PERSISTENCE_UNIT = "online_shop";
-	private ServletConfig config;
-	private int loggedUserId;
-	private long activeChatID;
+	private ServletConfig config;	
 
 	// Inject the Connection Factory
 	@Resource(mappedName = "ChatRoomFactory") //logic name
@@ -48,7 +49,7 @@ public class SendMessageQueueServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public SendMessageQueueServlet() {
+	public SendMessageServlet() {
 		super();
 	}
 
@@ -58,45 +59,44 @@ public class SendMessageQueueServlet extends HttpServlet {
 
 	public void doPost( HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-
-			ChatBean activeChat = new ChatBean();
-
+			ChatList<UserChat> userChats = null; 
+			
 			//Obtain attributes from the session
 			HttpSession oHttpSession = request.getSession();
-			loggedUserId = (int) oHttpSession.getAttribute("user_id");					
-			activeChatID = (long) oHttpSession.getAttribute("activeChat");
+			int loggedUserId = (int) oHttpSession.getAttribute("user_id");					
+			//Retrieve the chats from the session
+			Object obj = oHttpSession.getAttribute("chats");										
+			userChats = (ChatList<UserChat>) obj;
 
 			//Obtain attributes from the request
-			//Id of the user recipient of the messages.
-			int recipientUser = (int) request.getAttribute("sendTo");
-
+			//Get the id of the currently opened chat
+			int chatId = Integer.parseInt(request.getParameter("chatId"));
+			//int userRef = Integer.parseInt(request.getParameter("sendTo"));
+			
 
 			//Create a message Producer using the predefined Connection Factory
 			Connection oConn = chatRoomFactory.createConnection();
 			Session oSession = oConn.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			MessageProducer oProducer = oSession.createProducer(queue);
 
+
 			//Create DAO
 			ChatDAOImpl chatDAO = new ChatDAOImpl(PERSISTENCE_UNIT);
 
-			//If active chat == -1 --> is a new chat
-			if(activeChatID == -1) {
-				//Create a new ChatBean instance and call JPA
-				ChatBean oNewChat = new ChatBean();
-				//oNewChat.setChatID(chatID);//THIS ID should be only set by the JPA
-				oNewChat.setBuyer(loggedUserId);
-				oNewChat.setSeller(recipientUser);
-				oNewChat.setLastMsgId("");
-
-				chatDAO.insert(oNewChat);
-
-				activeChatID = oNewChat.getChatID();
-				activeChat = oNewChat;
-
-
+			UserChat openedChat = userChats.getChatById(chatId);
+			ChatBean chatBean = null;
+			
+			/*. If id = -1 the chat is new and no messages has been sent yet. 
+			 * The chat will be persistent after sending the first message
+			*/
+			if(chatId == -1) {				
+				//Retrieve the currently opened chat
+				chatBean = ChatBean.parse(openedChat);
+				
+				chatDAO.insert(chatBean);				
 			}else {
 				//The chat already exist. Retrieve it from the DB
-				activeChat = chatDAO.getChatById(activeChatID);
+				chatBean = chatDAO.getChatById(chatId);				
 			}
 
 			//Create the message
@@ -104,26 +104,27 @@ public class SendMessageQueueServlet extends HttpServlet {
 
 			//Retrieve the parameter 'message' from the request, and use it as text of our message
 			txtMsg.setText(request.getParameter("message"));				
-
+			
 			//Set additional properties of the message			
-			txtMsg.setLongProperty("chatID", activeChatID);			
+			txtMsg.setLongProperty("chatID", chatBean.getChatId());			
 			txtMsg.setIntProperty("senderID", loggedUserId);								
 
 			// Use the message producer to send the message	
 			oProducer.send(txtMsg);
 
-			//Update the lastMessageId value in the DB
-			activeChat.setLastMsgId(txtMsg.getJMSMessageID());
-			chatDAO.update(activeChat);
-
+			//Update the lastMessageId value in the DB			
+			chatBean.setLastMsgId(txtMsg.getJMSMessageID());
+									
+			chatDAO.update(chatBean);
+	
 			// Close the producer
 			oProducer.close();
 			// Close the session 
 			oSession.close();
 			// Close the connection 
 			oConn.close();
-
-			//Redirect
+			
+			//Redirect			
 			config.getServletContext().getRequestDispatcher(CHATROOM_PAGE).forward(request, response);
 
 		} catch (JMSException e) {

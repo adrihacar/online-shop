@@ -22,8 +22,9 @@ CREATE TABLE chats (
     seller BIGINT UNSIGNED NOT NULL,
     lastMsgId VARCHAR(256) NOT NULL,
     
-    FOREIGN KEY(buyer) REFERENCES users(id),
-    FOREIGN KEY(seller) REFERENCES users(id)
+    FOREIGN KEY(buyer) REFERENCES users(id) ON DELETE CASCADE, 
+    FOREIGN KEY(seller) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT no_duplicated_chats UNIQUE (buyer, seller)
 );
 
 CREATE TABLE products (
@@ -65,7 +66,7 @@ INSERT INTO users (name, surname, email, location, password, salt) VALUES
   ("John","Doe","email1@gmail.com","Madrid","KxU2olalQaveCPDeDjLLM8f5+sHU0U7e843EQcwVWTM=","4qnk6xyd4dIP99UM51VxHA=="),
   ("Jane","Doe","email2@gmail.com","Barcelona","AczcC97ldZyZc2++M5QAZmEs/IYz6V+Dd9vfNNomu7s=","YIhSw8VQYH+b5kFhI0cWrA=="),
   ("Fulanito","Doe","email3@gmail.com","Madrid","+SD+kLGrVrpaPt6Zo7oA+u/7sQjtOsYrZbWH5LhmrrI=","BoRDT5HE6q1X+FYDxtn4mg=="),
-  ("Fulanita","Doe","email4gmail.com","Valencia","mvguFsrGzKhvq6f293p5yna2NHDraaeQOSV+bwEg4mY=","PkVbbGn/hXFXgWzGMelSsA==");
+  ("Fulanita","Doe","email4@gmail.com","Valencia","mvguFsrGzKhvq6f293p5yna2NHDraaeQOSV+bwEg4mY=","PkVbbGn/hXFXgWzGMelSsA==");
   
 INSERT INTO users (name, surname, email, location, password, salt,admin) VALUES
   ("admin", "admin", "admin@admin.com", "Spain", "8c5MAO8Krg+21sPX8EGnxQNVud8AdfXqd/mahTNVahI=", "zBdM3w/UMlpHWqQ3E5SL3g==",1);

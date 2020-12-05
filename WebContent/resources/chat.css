@@ -1,6 +1,6 @@
     
 
-.container{max-width:1170px; margin:auto;}
+.container{max-width:1170px; margin:auto; margin-top: 30px;}
 img{ max-width:100%;}
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
@@ -12,6 +12,7 @@ img{ max-width:100%;}
   border: 1px solid #c4c4c4;
   clear: both;
   overflow: hidden;
+  background: #f8f8f8;
 }
 .top_spac{ margin: 20px 0 0;}
 
@@ -61,10 +62,8 @@ img{ max-width:100%;}
 }
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
-.active_chat{ 
-	/*background:#ebebeb;*/
-	background-color: #ebebeb;
-	border: 2px solid #4CAF50;
+.active_chat{ 	
+	border: 2px solid #ffc107;
 }
 
 .incoming_msg_img {
@@ -113,12 +112,12 @@ img{ max-width:100%;}
   width: 46%;
 }
 
-.buyer_chat{
+.toBuy{
 	
 }
 
-.seller_chat{
-	
+.toSell{
+	background: #8ab8dc3b;
 }
 
 .input_msg_write input {
@@ -132,7 +131,7 @@ img{ max-width:100%;}
 
 .type_msg {border-top: 1px solid #c4c4c4;position: relative;}
 .msg_send_btn {
-  background: #05728f none repeat scroll 0 0;
+  background: #409be2 none repeat scroll 0 0;
   border: medium none;
   border-radius: 50%;
   color: #fff;
@@ -143,6 +142,7 @@ img{ max-width:100%;}
   right: 0;
   top: 11px;
   width: 33px;
+  margin-right: 5px;
 }
 .messaging { padding: 0 0 50px 0;}
 .msg_history {

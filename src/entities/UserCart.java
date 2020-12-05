@@ -8,15 +8,17 @@ import java.util.List;
 import utils.CartList;
 
 public class UserCart extends CartBean {
+	//Constants
 	public static final int PRICE_PRECISION = 2;
+	
+	//Attributes
 	private List<ProductBean> productsInfo;
 	private CartList<CartProductBean> productsInCart;
 	private int size;
 	private int cartId;
 
-	public UserCart() {
-
-	}
+	//Constructors
+	public UserCart() { }
 
 	public UserCart(int user) {
 		super(user);
@@ -27,43 +29,16 @@ public class UserCart extends CartBean {
 			throws Exception {
 		if (productsInfo.size() != productsInCart.size())
 			throw new Exception("The args 'productsInfo' and 'productsInCart' must have the same size ");
-
-		this.setUser(cart.getUser());
-		this.setAddress(cart.getAddress());
-		this.setBought(cart.isBought());
-		this.setPaymethod(cart.getPaymethod());
-		this.setDate(cart.getDate());
-
+		
+		this.updateCartInfo(cart);
 		this.productsInfo = productsInfo;
 		this.productsInCart = productsInCart;
 		this.size = productsInfo.size();
 		this.cartId = cart.getId();
 
 	}
-
-	/**
-	 * Updates the information of the calling cart with the Cart information of the
-	 * user in the Database
-	 * 
-	 * @throws Exception generated when trying to update this UserCart with the cart
-	 *                   information from the database
-	 * 
-	 */
-	public void updateToCurrentCart() throws Exception {
-		try {
-			// DAOs
-			CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
-
-			// get cart of user
-			CartBean cart = cartDAO.findCartByUser(this.getUser());
-
-			this.setCartInfo(cart);
-		} catch (Exception e) {
-			throw e;
-
-		}
-	}
-
+	
+	//Getters and setters
 	public int size() {
 		return size;
 	}
@@ -121,6 +96,10 @@ public class UserCart extends CartBean {
 	public int getProductId(int index) {
 		return productsInfo.get(index).getId();
 	}
+	
+	public int getProductSeller(int index) {
+		return productsInfo.get(index).getSeller();
+	}
 
 	/**
 	 * Obtains the formatted purchase date of this UserCart
@@ -138,18 +117,48 @@ public class UserCart extends CartBean {
 
 		return date;
 	}
+	
+	//Auxiliary methods
+	
+	/**
+	 * Updates the information of the calling cart with the Cart information of the
+	 * user in the Database
+	 * 
+	 * @throws Exception generated when trying to update this UserCart with the cart
+	 *                   information from the database
+	 * 
+	 */
+	public void updateToCurrentCart() throws Exception {		
+			// DAOs
+			CartDAOImpl cartDAO = new CartDAOImpl("online_shop");
+
+			// get cart of user
+			CartBean cart = cartDAO.findCartByUser(this.getUser());
+			this.parseUserCart(cart);
+	}
+	
+	/**
+	 * Sets the attributes inherited from CartBean to new values given by another CartBean
+	 * @param cart CartBean containing the new information
+	 * @throws Exception 
+	 */
+	private void updateCartInfo(CartBean cart) throws Exception {
+		this.setUser(cart.getUser());
+		this.setAddress(cart.getAddress());
+		this.setBought(cart.isBought());
+		this.setPaymethod(cart.getPaymethod());
+		this.setDate(cart.getDate());	
+	}
 
 	/**
 	 * Obtains the list of products and all the cart information from the given
 	 * {@link CartBean} object
 	 * 
 	 * @param cart {@link CartBean} with the information to be set in this UserCart
-	 * @Overrides
 	 * @throws Exception generated when trying to set the cart attributes
 	 */
-	@Override
-	public void setCartInfo(CartBean cart) throws Exception {
-		try {
+	public void parseUserCart(CartBean cart) throws Exception {
+					
 			// DAOs
 			CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
 			ProductDAOImpl productDAO = new ProductDAOImpl("online_shop");
@@ -166,19 +175,13 @@ public class UserCart extends CartBean {
 				ProductBean product = productDAO.findByID(productid);
 				productsInfo.add(product);
 			}
-			super.setCartInfo(cart);
+			this.updateCartInfo(cart);			
 			if (productsInfo.size() != cartProductList.size())
 				throw new Exception("The args 'productsInfo' and 'productsInCart' must have the same size ");
 			this.productsInfo = productsInfo;
 			this.productsInCart = cartProductList;
 			this.size = productsInfo.size();
-			this.cartId = cart.getId();
-
-		} catch (Exception e) {
-			throw e;
-
-		}
-
+			this.cartId = cart.getId();						
 	}
 
 	/**
@@ -192,8 +195,7 @@ public class UserCart extends CartBean {
 	 * @throws Exception Exception generated when trying to modify the product
 	 *                   information
 	 */
-	public void modifyProduct(int productId, int quantity, boolean resetQuantity) throws Exception {
-		try {
+	public void modifyProduct(int productId, int quantity, boolean resetQuantity) throws Exception {		
 			// DAOs
 			CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
 
@@ -217,42 +219,36 @@ public class UserCart extends CartBean {
 				cartProductDAO.insert(productToAdd);
 				this.size++;
 			}
-			this.updateToCurrentCart();
-		} catch (Exception e) {
-			throw e;
-		}
+			this.updateToCurrentCart();		
 
 	}
 
 	/**
-	 * Deletes a product from the CartProducts list
+	 * Deletes a product from the cart
 	 * 
 	 * @param productId Product to be deleted
 	 * @throws Exception Throws a new exception if the product specified in the
 	 *                   parameters is not within this UserCart product list
 	 */
-	public void deleteProduct(int productId) throws Exception {
-		try {
+	public void deleteProduct(int productId) throws Exception {		
 			// DAOs
 			CartProductDAOImpl cartProductDAO = new CartProductDAOImpl("online_shop");
 
-			CartProductBean productToAdd = new CartProductBean(this.cartId, productId, 0);
+			CartProductBean productToRemove = new CartProductBean(this.cartId, productId, 0);
 
 			// Check if the selected product had been added previously to the cart
-			if (this.productsInCart.contains(productToAdd)) {
+			if (this.productsInCart.contains(productToRemove)) {
 
 				// The product has been found in the list. Remove it.
-				productToAdd = productsInCart.getProductById(productId);
-				cartProductDAO.delete(productToAdd);
+				productToRemove = productsInCart.getProductById(productId);
+				cartProductDAO.delete(productToRemove);
 				this.updateToCurrentCart();				
 			} else {
 				// the product is not in the cart
 				// throw a new Exception
 				throw new Exception("The specified product does not belong to this list");
 			}
-		} catch (Exception e) {
-			throw e;
-		}
+		
 
 	}
 

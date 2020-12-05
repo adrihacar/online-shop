@@ -7,8 +7,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import jdbc.UserDAOImp;
-
 public class ChatDAOImpl implements ChatDAO{
 	
 	private EntityManagerFactory emFact;
@@ -19,6 +17,7 @@ public class ChatDAOImpl implements ChatDAO{
 
 	/**
 	 * Inserts a new chat in the 'chats' table
+	 * @param newChat new chat to insert in the database
 	 */
 	@Override
 	public void insert(ChatBean newChat) throws Exception {
@@ -31,6 +30,7 @@ public class ChatDAOImpl implements ChatDAO{
 
 	/**
 	 * Updates a chat instance of the table 'chats'
+	 * @param chat Chat to be updated in the database
 	 */
 	@Override
 	public void update(ChatBean chat) throws Exception {
@@ -41,6 +41,11 @@ public class ChatDAOImpl implements ChatDAO{
 		em.close();		
 	}
 
+	/**
+	 * Query the database for chats involving the specified user.
+	 * @param user Id of the user requesting the chats
+	 * @return A list of ChatBeans that belong to the user
+	 */
 	@Override
 	public List<ChatBean> getChatsByUser(int user) {
 		EntityManager em = emFact.createEntityManager();				
@@ -50,6 +55,11 @@ public class ChatDAOImpl implements ChatDAO{
 		return result;
 	}
 
+	/**
+	 * Query the database to obtain the chat with the specified id
+	 * @param chatId Id of the chat to be retrieved from the database
+	 * @return The specified ChatBean. Null if the chat was not found in the database 
+	 */
 	@Override
 	public ChatBean getChatById(long chatId) {
 		EntityManager em = emFact.createEntityManager();		

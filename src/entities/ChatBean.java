@@ -1,30 +1,25 @@
 package entities;
 
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@NamedQueries({
-	@NamedQuery(name="findChatsByUser",
-			query="SELECT c FROM ChatBean c WHERE c.buyer= :user OR c.seller= :user ORDER BY c.lastMsgId DESC"),
-	//@NamedQuery(name ="updateLastMsg",
-	//		query="UPDATE ChatBean c SET c.lastMsgId = :latestMsgId")  // FIX MERGE, named query wasnt working and wasnt used
-})
+@NamedQuery(name="findChatsByUser",
+			query="SELECT c FROM ChatBean c WHERE c.buyer= :user OR c.seller= :user ORDER BY c.lastMsgId DESC")
 @Table(name="chats")
 public class ChatBean {
 	/** Id of the chat*/
 	//All the relationships of this Entity are unidirectional
 	
 	@Id
-	@GeneratedValue(strategy = AUTO)
+	@GeneratedValue(strategy = IDENTITY)
 	private long id;
 	
 	@Column(name="buyer")
@@ -52,11 +47,11 @@ public class ChatBean {
 		this.lastMsgId = lastMsgId;
 	}
 
-	public long getChatID() {
+	public long getChatId() {
 		return id;
 	}
 
-	public void setChatID(long chatID) {
+	public void setChatId(long chatID) {
 		this.id = chatID;
 	}
 
@@ -91,18 +86,16 @@ public class ChatBean {
 	public void setLastMsgId(String lastMsgId) {
 		this.lastMsgId = lastMsgId;
 	}
-	/**
-	 * Checks if the calling chat has the specified users as participants (buyer and seller)
-	 * 
-	 * @param user1 ID of a user having a conversation
-	 * @param user2 ID of a user having a conversation
-	 * @return True if the chat is between the two users specified in the parameters
-	 */
-	public boolean isBetween(int user1, int user2) {
-		boolean from1to2 = (this.getBuyer() == user1 && this.getSeller() == user2);
-		boolean from2to1 = (this.getBuyer() == user2 && this.getSeller() == user1); 
-		return (from1to2 || from2to1);			
+
+	public static ChatBean parse(UserChat userChat){
+		ChatBean chatBean = new ChatBean();
+		chatBean.setBuyer(userChat.getBuyer());
+		chatBean.setSeller(userChat.getSeller());
+		chatBean.setLastMsgId(userChat.getLastMsgId());
+		
+		return chatBean;
 	}
+	
 	
 
 

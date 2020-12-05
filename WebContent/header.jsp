@@ -12,7 +12,7 @@
     <link href="./resources/album.css" rel="stylesheet">
 </head>
 <body>
-<div class="container" >
+<div class="container" style="max-width: 1075px;margin-top: 0px;">
           <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarsExample09">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item ">
-                  <a class="btn btn-outline-primary" type="button" href="/online_shop/dashboard" class="nav-link" type='submit'>Online Shop</a>
+                  <a class="btn btn-outline-primary" type="button" href="/online_shop/dashboard" class="nav-link" type='submit'>Home</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="./addProduct.jsp">Add product</a>
@@ -29,13 +29,19 @@
                 <li class="nav-item">
                   <a class="nav-link" href="./Catalog">My products</a>
             </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="./purchases">Purchases</a>
+            </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="./chatroom">Chats</a>
+            </li>
               </ul>
               <form class="form-inline my-2 my-md-0">
               <div style="padding-right: 20px;">
-                <a type="button" class="btn btn-outline-warning" href="./cart">My cart</a>
+                <a type="button" class="btn btn-outline-warning" href="./cart">Cart</a>
               </div>
 			</form>
-			<form class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
+			<form style="display: contents;" class="form-inline my-2 my-md-0" action='/online_shop/Search' method='post'>
                 <div>
                 <label style="color: white" for="category"></label>
                 <select id="category" name="cattegoryProductSearch">
@@ -46,11 +52,11 @@
                   <option value="3">Clothes</option>
                 </select>
             </div>
-                <input name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
+                <input style="width: 10%;" name="sarchText" class="form-control" type="text" placeholder="Search" aria-label="Search">
                 <button type="submit" class="btn btn-primary nav-item">Search</button>
               </form>
                <div style="padding-left: 25px;">
-                  <a class="btn btn-outline-info" href="./editUser">My user</a>
+                  <a class="btn btn-outline-info" href="./editUser">Account</a>
                 </div>
                 <div style="padding-left: 5px;">
                   <a class="btn btn-outline-danger" href="./logout">Log out</a>

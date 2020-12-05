@@ -97,12 +97,6 @@ public class PaymentGatewayConsumerServlet extends HttpServlet {
 		    // create new empty cart
 	        CreateCart createCart = new CreateCart();
 	        createCart.createCart(cartBean.getUser());
-			
-			System.out.println(cart);
-			System.out.println(paymethod);
-			System.out.println(address);
-			System.out.println(date);
-			System.out.println("payment completeed");
 			connection.close();
 			consumer.close();
 			

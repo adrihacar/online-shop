@@ -1,5 +1,3 @@
-//const http = require("http");
-
 
 function scrollToContent(){
  	
@@ -18,13 +16,20 @@ function scrollToContent(){
  
  $(document).ready(function(){
 		$('.chat_list').click(function(){			
-			let chatRef = this.getAttribute("chat-ref");			
+			let chatRef = this.getAttribute("chat-ref");
+			let chatElem = this;		
 			$.ajax({
 				type: 'POST',
-				data: {chatRef: chatRef},
+				data: {
+					chatRef: chatRef,					
+				},
 				url: 'swapchat',
 				success: function(result){									
-					$('#msg_history').html(parseResult(result));
+					document.querySelector('#i_openedChat').setAttribute("value", chatRef);
+					$('.active_chat').removeClass("active_chat");
+					chatElem.classList.add("active_chat");					
+					$('#msg_history').html(result);
+					
 				}
 				
 			});
@@ -32,6 +37,7 @@ function scrollToContent(){
 		});
 		
 	});
+	
 /**
 * Parses the input (String) to an array of Strings,
 * dividing the input String using the separator ', ' 

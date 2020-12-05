@@ -78,7 +78,7 @@ public class PurchasesLogServlet extends HttpServlet {
 			
 			for (CartBean cart : boughtCarts) {
 				UserCart boughtCart = new UserCart(user);				
-				boughtCart.setCartInfo(cart);
+				boughtCart.parseUserCart(cart);
 				purchases.add(boughtCart);				
 			}
 			
