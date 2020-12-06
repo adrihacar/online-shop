@@ -5,6 +5,10 @@ import com.product.api.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -45,5 +49,20 @@ public class ProductServiceImpl implements ProductService {
         Product product = productDAO.findById(id);
         product.setStatus(SOLD);
         productDAO.save(product);
+    }
+
+    @Override
+    public List<Product> searchProductCategory(String q, Integer category) {
+        List<Product> productAux;
+        if(category==null) productAux = productDAO.findAll();
+        else productAux = productDAO.findAllByCategory(category);
+        List<Product> productsToReturn = new ArrayList<>();
+        for (Product aux : productAux) {
+            if (aux.getName().toLowerCase(Locale.ROOT).contains(q.toLowerCase(Locale.ROOT)) ||
+                    aux.getDescription().toLowerCase(Locale.ROOT).contains(q.toLowerCase(Locale.ROOT))) {
+                productsToReturn.add(aux);
+            }
+        }
+        return productsToReturn;
     }
 }

@@ -22,11 +22,18 @@ public class productController {
 
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<List<Product>> getProductsByStatus(
-            @RequestParam(value="status", required = false) int status){
-        if(status == 0 || status == 1)
+            @RequestParam(value="status", required = false) Integer status){
+        if(status != null)
             return new ResponseEntity<>(productDAO.findAllByStatus(status), HttpStatus.OK);
         else
             return new ResponseEntity<>(productDAO.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/products/search", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<Product>> searchByNameAndCategory(
+            @RequestParam(value="q", required = false) String q,
+            @RequestParam(value="category", required = false) Integer category){
+            return new ResponseEntity<>(productService.searchProductCategory(q, category), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/products/{idSeller}", method = RequestMethod.GET)
