@@ -46,7 +46,7 @@ public class User {
     private String salt;
 
     @Column(name="admin")
-    private int admin;
+    private Integer admin;
 
     public User(String name, String surname, String email, String location, String password) {
         this.name = name;
