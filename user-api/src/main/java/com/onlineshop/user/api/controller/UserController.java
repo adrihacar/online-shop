@@ -25,7 +25,7 @@ public class UserController {
             @RequestBody User user){
         if(userDAO.existsByEmail(user.getEmail())) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         userService.registerUser(user.getName(), user.getSurname(), user.getEmail(), user.getLocation(), user.getPassword());
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(true, HttpStatus.CREATED);
     }
 
     @RequestMapping(value="/users/login", method = RequestMethod.POST)
