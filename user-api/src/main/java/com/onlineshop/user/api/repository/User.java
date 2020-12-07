@@ -1,4 +1,4 @@
-package com.user.api.repository;
+package com.onlineshop.user.api.repository;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

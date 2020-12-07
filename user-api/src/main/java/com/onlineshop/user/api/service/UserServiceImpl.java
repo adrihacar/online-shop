@@ -1,7 +1,7 @@
-package com.user.api.service;
+package com.onlineshop.user.api.service;
 
-import com.user.api.repository.User;
-import com.user.api.repository.UserDAO;
+import com.onlineshop.user.api.repository.User;
+import com.onlineshop.user.api.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

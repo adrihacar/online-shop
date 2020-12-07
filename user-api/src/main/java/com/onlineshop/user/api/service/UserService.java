@@ -1,4 +1,4 @@
-package com.user.api.service;
+package com.onlineshop.user.api.service;
 
 public interface UserService {
 

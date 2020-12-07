@@ -1,13 +1,15 @@
-package com.user.api.controller;
+package com.onlineshop.user.api.controller;
 
-import com.user.api.repository.User;
-import com.user.api.repository.UserDAO;
-import com.user.api.service.UserServiceImpl;
+import com.onlineshop.user.api.repository.User;
+import com.onlineshop.user.api.repository.UserDAO;
+import com.onlineshop.user.api.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -29,7 +31,7 @@ public class UserController {
     @RequestMapping(value="/users/login", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Boolean> logInUser(
             @RequestBody User user){
-        if(userDAO.existsByEmail(user.getEmail())) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(!userDAO.existsByEmail(user.getEmail())) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         userService.logInUser(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
@@ -49,6 +51,11 @@ public class UserController {
         if (!userDAO.existsById(idUser)) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         userService.editUser(idUser, user.getName(), user.getSurname(), user.getLocation(), user.getPassword());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value="/users", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<User>> listUsers(){
+        return new ResponseEntity<>(userDAO.findAll(), HttpStatus.OK);
     }
 
 
