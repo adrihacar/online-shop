@@ -1,6 +1,6 @@
-package com.product.api.service;
+package com.onlineshop.product.api.service;
 
-import com.product.api.repository.Product;
+import com.onlineshop.product.api.repository.Product;
 
 import java.util.List;
 

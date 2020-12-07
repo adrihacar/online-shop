@@ -1,4 +1,4 @@
-package com.product.api.repository;
+package com.onlineshop.product.api.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

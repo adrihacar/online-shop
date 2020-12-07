@@ -1,4 +1,4 @@
-package com.product.api.repository;
+package com.onlineshop.product.api.repository;
 
 import static javax.persistence.GenerationType.IDENTITY;
 

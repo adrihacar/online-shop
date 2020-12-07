@@ -1,8 +1,8 @@
-package com.product.api.controller;
+package com.onlineshop.product.api.controller;
 
-import com.product.api.repository.Product;
-import com.product.api.repository.ProductDAO;
-import com.product.api.service.ProductServiceImpl;
+import com.onlineshop.product.api.service.ProductServiceImpl;
+import com.onlineshop.product.api.repository.Product;
+import com.onlineshop.product.api.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
